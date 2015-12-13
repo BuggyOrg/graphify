@@ -1,0 +1,15 @@
+{
+  "name": "@buggyorg/graphify",
+  "description": "visualize the graph of an buggy network graph",
+  "version": "0.0.1",
+  "bin": {
+    "buggy-graphify": "./index.js"
+  },
+  "dependencies": {
+    "d3": "^3.5.10",
+    "d3-measure-text": "0.0.2",
+    "jsdom": "^7.2.1",
+    "klayjs": "^0.3.2",
+    "readtoend": "0.0.1"
+  }
+}
