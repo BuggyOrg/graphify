@@ -1,0 +1,28 @@
+<svg width="600" height="600" xmlns="http://www.w3.org/2000/svg"><style>
+	/*  */
+	g.leaf > rect {
+		stroke: #fff;
+		stroke-width: 1px;
+		opacity: .5;
+	}
+
+	g.compound > rect {
+		opacity: 0.1;
+	}
+	
+	.node {
+	}
+	
+	.link {
+		stroke: #999;
+		stroke-opacity: .6;
+		fill: none;
+	}
+	
+	.port {
+		stroke: #000;
+		width: 1px;
+		opacity: .6;
+	}
+	/*  */
+</style><g><g transform="scale(2.2388059701492535)"><path class="link" d="M0 0"></path><path class="link" d="M0 0"></path><g class="node compound"><rect width="268" height="148" x="0" y="0"></rect><title>root</title></g><g class="node compound"><rect width="124" height="124" x="132" y="12"></rect><title>n2</title></g><g class="node leaf"><rect width="40" height="40" x="144" y="24"></rect><title>n5</title></g><g class="node leaf"><rect width="40" height="40" x="204" y="84"></rect><title>n4</title></g><g class="node leaf"><rect width="40" height="40" x="144" y="84"></rect><title>n3</title></g><g class="node leaf"><rect width="100" height="100" x="12" y="24"></rect><title>n1</title></g></g></g></svg>

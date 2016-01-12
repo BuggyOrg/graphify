@@ -1,0 +1,7 @@
+digraph G {
+  rankdir=LR;
+  node [shape=record];
+  struct1 [shape=record,label="{left|mid|<f>right}"];
+  struct2 [shape=record,label="{<g>left|mid|right}"];
+  struct1:f -> struct2:g;
+}

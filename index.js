@@ -39,17 +39,15 @@ var layouter = klay.d3kgraph()
     edgeRouting: "ORTHOGONAL"
   })
 
-// load the data and render the elements
-rte.readToEnd(process.stdin, function(err,graphStr){
+var hadInput = false
+
+var genGraph = function(err,graphStr){
+  hadInput = true
   if(err){
     console.error(err)
     return
   }
   var graph = JSON.parse(graphStr)
-  graph.children.forEach(function(c){
-     var dim = d3MeasureText(c.labels[0].text)
-     console.log("Measure of : '" + c.labels[0].text + "' is " + dim)
-  })
   
   layouter.on("finish", function(d) {
     var nodes = layouter.nodes();
@@ -104,4 +102,13 @@ rte.readToEnd(process.stdin, function(err,graphStr){
   doc.body.children[0].innerHTML = fs.readFileSync(__dirname + '/template.html') + doc.body.children[0].innerHTML
   console.log(doc.body.innerHTML)
   
-})
+}
+
+// load the data and render the elements
+rte.readToEnd(process.stdin, genGraph)
+
+setTimeout(function(){
+  if(!hadInput){
+    fs.readFile('./graphify/examples/hierarchy.json', genGraph)
+  }
+},500)
