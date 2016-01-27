@@ -6,10 +6,26 @@
     "buggy-graphify": "./index.js"
   },
   "dependencies": {
+    "browserify": "^13.0.0",
     "d3": "^3.5.10",
     "d3-measure-text": "0.0.2",
-    "jsdom": "^7.2.1",
+    "gulp": "^3.9.0",
+    "gulp-sourcemaps": "^1.6.0",
     "klayjs": "^0.3.2",
-    "readtoend": "0.0.1"
+    "klayjs-d3": "^0.3.4",
+    "lodash": "^4.0.0",
+    "nightmare": "2.0.8",
+    "readtoend": "0.0.1",
+    "run-sequence": "^1.1.5",
+    "vo": "^1.0.3"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.3.13",
+    "babelify": "^7.2.0",
+    "fs": "0.0.2",
+    "gulp": "^3.9.0",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^3.7.0"
   }
 }

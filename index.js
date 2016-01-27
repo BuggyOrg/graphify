@@ -19,9 +19,21 @@ function viewport() {
   }
 }
 
+function draw() {
+  console.log("draw");
+}
+
+var text = d3.select(doc.body)
+  .append("input")
+  .attr("type", "text")
+  .attr("id", "txtInput")
+  .attr("name", "txtInput")
+  .attr("width", 400)
+  .attr("height", 200)
+
 var width = 600
 var height = 600
-var idfun = function(d) { return d.id }    
+var idfun = function(d) { return d.id }
 
 var svg = d3.select(doc.body)
   .append("svg")
@@ -47,38 +59,38 @@ rte.readToEnd(process.stdin, function(err,graphStr){
   }
   var graph = JSON.parse(graphStr)
   graph.children.forEach(function(c){
-     var dim = d3MeasureText(c.labels[0].text)
-     console.log("Measure of : '" + c.labels[0].text + "' is " + dim)
+     //var dim = d3MeasureText(c.labels[0].text)
+     //console.log("Measure of : '" + c.labels[0].text + "' is " + dim)
   })
-  
+
   layouter.on("finish", function(d) {
     var nodes = layouter.nodes();
     var links = layouter.links(nodes);
-    
+
     var linkData = root.selectAll(".link")
       .data(links, idfun);
     var link = linkData.enter()
       .append("path")
       .attr("class", "link")
       .attr("d", "M0 0");
-    
+
     var nodeData = root.selectAll(".node")
       .data(nodes, idfun);
     var node = nodeData.enter()
       .append("g")
-      .attr("class", function(d) { 
-          if (d.children) return "node compound"; else return "node leaf"; 
+      .attr("class", function(d) {
+          if (d.children) return "node compound"; else return "node leaf";
       });
-        
+
     var atoms = node.append("rect")
       .attr("width", function(d){ return d.width; })
       .attr("height", function(d){ return d.height; })
       .attr("x", function(d){ return d.x })
       .attr("y", function(d){ return d.y })
-    
+
     node.append("title")
-      .text(function(d) { return d.id; });  
-        
+      .text(function(d) { return d.id; });
+
     // apply edge routes
     link.transition().attr("d", function(d) {
       var path = "";
@@ -89,19 +101,19 @@ rte.readToEnd(process.stdin, function(err,graphStr){
       path += "L" + d.targetPoint.x + " " + d.targetPoint.y + " ";
       return path;
     });
-  
+
     // apply node positions
   //  node.transition()
   //    .attr("transform", function(d) { return "translate(" + (d.x || 0) + " " + (d.y || 0) + ")"})
-    
+
     atoms.transition()
       .attr("width", function(d) { return d.width; })
       .attr("height", function(d) { return d.height; })
   });
-  
+
   layouter.kgraph(graph)
   doc.body.children[0].setAttribute("xmlns", "http://www.w3.org/2000/svg")
   doc.body.children[0].innerHTML = fs.readFileSync(__dirname + '/template.html') + doc.body.children[0].innerHTML
   console.log(doc.body.innerHTML)
-  
+
 })

@@ -1,15 +1,15 @@
 {
-  "id": "root", 
+  "id": "root",
   "children": [{
-    "id": "n1", 
-    "labels": [ { "text": "n1" } ],
+    "id": "n1",
+    "labels": [ { "text": "n1dsdsd" } ],
     "width": 100,
-    "height": 100
+    "height": 200
   },{
     "id": "n2",
     "labels": [ { "text": "n2" } ],
-    "children": [{ 
-      "id": "n3", 
+    "children": [{
+      "id": "n3",
       "labels": [ { "text": "n3" } ],
       "width": 40,
       "height": 40
@@ -25,13 +25,13 @@
       "height": 40}
     ],
     "edges": [{
-      "id": "e4", 
+      "id": "e4",
       "source": "n3",
       "target": "n4"
     }]
   }],
   "edges": [{
-    "id": "e1", 
+    "id": "e1",
     "labels": [ { "text": "e1" } ],
     "source": "n1",
     "target": "n2"
