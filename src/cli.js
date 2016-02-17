@@ -3,7 +3,7 @@ var fs = require('fs')
 var vo = require('vo')
 
 // cli arguments and defaults
-var arg0 = process.argv[2] || 'examples/hierarchy.json'
+var arg0 = process.argv[2] || 'examples/testgraph.json'
 var arg1 = process.argv[3] || 'src/style.css'
 
 /* read home folder */
@@ -33,11 +33,11 @@ vo(function* () {
     .goto(path.join('file://', graphifyPath, 'app/index.html'))
     .type('#txtInput', input)
     .click('#btnInput')
-    .evaluate(function() { Update(); })
     .wait('#svgOutput')
+    .wait(1000)
     .evaluate(function(css) {
-      var svg = document.getElementById('txtInput')
-      //svg.innerHTML = "<style> /* <![CDATA[ */" + css + "/* ]]> */ </style>" + svg.innerHTML
+      var svg = document.getElementById('svgOutput')
+      svg.innerHTML = "<style> /* <![CDATA[ */" + css + "/* ]]> */ </style>" + svg.innerHTML
       return svg.outerHTML
     }, css)
 
@@ -48,5 +48,5 @@ vo(function* () {
 })(function (err, result)
 {
   if (err) return console.log(err);
-  console.log(result);
+  //console.log(result);
 });
