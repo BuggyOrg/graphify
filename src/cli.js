@@ -2,14 +2,25 @@ var Nightmare = require('nightmare')
 var fs = require('fs')
 var vo = require('vo')
 
-var inputPath = "examples/hierarchy.json"
+// cli arguments and defaults
+var arg0 = process.argv[2] || 'examples/hierarchy.json'
+var arg1 = process.argv[3] || 'src/style.css'
+
+/* read home folder */
+var path = require('path')
+var graphifyPath = path.normalize(path.join(__dirname, '../'))
+
+/* read input graph */
+var inputPath = path.join(graphifyPath, arg0)
 var input = fs.readFileSync(inputPath, 'utf8')
 
-var cssPath = "src/style.css"
+/* read style sheet */
+var cssPath = path.join(graphifyPath, arg1)
 var css = fs.readFileSync(cssPath, 'utf8')
 
 vo(function* () {
 
+  /* Nightmare Options */
   var nightmare = Nightmare(
   {
     plugins: true,
@@ -17,29 +28,25 @@ vo(function* () {
     allowRunningInsecureContent: true
   })
 
+  /* Open page in nightmare and read svg result */
   var result = yield nightmare
-    //.viewport(2000, 2000)
-    .goto('file:///home/gdv/vschmidt/Buggy/buggy-meta/graphify/app/index.html')
+    .goto(path.join('file://', graphifyPath, 'app/index.html'))
     .type('#txtInput', input)
     .click('#btnInput')
+    .evaluate(function() { Update(); })
     .wait('#svgOutput')
-    .screenshot('screenshot.png')
     .evaluate(function(css) {
-      document.getElementById('svgOutput').innerHTML = "<style> /* <![CDATA[ */" + css + "/* ]]> */ </style>" + document.getElementById('svgOutput').innerHTML
-      return document.getElementById('svgOutput').outerHTML
-    }, css)
-/*    .wait('#svgOutput')
-    .evaluate(function(){
-      var svg = document.getElementById('svgOutput')
+      var svg = document.getElementById('txtInput')
+      //svg.innerHTML = "<style> /* <![CDATA[ */" + css + "/* ]]> */ </style>" + svg.innerHTML
       return svg.outerHTML
-    } )
-*/
-    console.log(result)
+    }, css)
+
+  console.log(result)
 
   yield nightmare.end()
 
 })(function (err, result)
 {
   if (err) return console.log(err);
-  //console.log(result);
+  console.log(result);
 });

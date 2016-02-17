@@ -57,28 +57,23 @@ function layoutGraph(graph, width, height)
 	var zoom = d3.behavior.zoom()
 	    .on("zoom", function() { redraw(svg) });
 
-	width = d3.select("#tdOutput").width
-	height = d3.select("#tdOutput").height
-
-	var svg = d3.select("#tdOutput")
+	var svg = d3.select("body")
 		.append("svg")
-		.attr("id", "svgOutput")
 		.attr("xmlns", "http://www.w3.org/2000/svg")
 		.attr("xmlns:xlink", "http://www.w3.org/1999/xlink")
 		.attr("xmlns:ev", "http://www.w3.org/2001/xml-events")
+		.attr("id", "svgOutput")
 		.attr("version", "1.1")
 		.attr("baseprofile", "full")
-		.attr("width", width)
-		.attr("height", height)
+		.attr("width", width + "mm")
+		.attr("height", height + "mm")
     .call(zoom)
 		.append("g")
 
 	// group shizzle
 	var root = svg.append("g")
 
-	var layouter = klay.d3adapter();
-
-	layouter
+	var layouter = klay.d3adapter()
 		.nodes(graph.nodes)
 		.links(graph.links)
 		.size([width, height])
@@ -89,33 +84,58 @@ function layoutGraph(graph, width, height)
 		})
     .defaultPortSize([2, 2])
 
-	var idfun = function(d) { return d.id; };
+	layouter
+		.on("finish", _.partial(layouter_on_finish, layouter, root))
+    .start();
+
+}
+
+function layouter_on_finish(layouter, root, d2)
+{
+
+	var nodes = layouter.nodes();
+	var links = layouter.links(nodes);
+
+	var idfun = function(d) { if(d.labels) return d.id; };
 	var labelfun = function(d) { return d.children ? "" : (d.name || "") };
 
-	var link = root.selectAll(".link")
-		.data(graph.links)
+	var linkData = root
+		.selectAll(".link")
+		.data(links, idfun)
 		.enter()
 		.append("path")
 		.attr("class", "link")
-		.attr("d", "M0 0")
+		.attr("d", function(d)
+		{
+			var path = "";
+			path += "M" + d.sourcePoint.x + " " + d.sourcePoint.y + " ";
+			(d.bendPoints || []).forEach(function(bp, i) {
+					path += "L" + bp.x + " " + bp.y + " ";
+			});
+			path += "L" + d.targetPoint.x + " " + d.targetPoint.y + " ";
+			return path;
+		});
 
 	var node = root.selectAll(".node")
-		.data(graph.nodes)
+		.data(nodes, idfun)
 		.enter()
 		.append("g")
+		.attr("class", function(d) {
+				if (d.children)
+					return "compound";
+				else
+					return "leaf";
+		});
 
-	node.append("rect")
-    .attr("class", "node")
-		.attr("width", function(d){ return d.width || 0; })
-		.attr("height", function(d){ return d.height || 0; })
-		.attr("x", 0)
-		.attr("y", 0)
+	var atoms = node
+		.append("rect")
+		.attr("width", function(d){ return d.width; })
+		.attr("height", function(d){ return d.height; })
+		//.attr("x", function(d){ return d.x })
+		//.attr("y", function(d){ return d.y });
 
-	node.append("title")
-		.text(function(d) { return d.name; });
-
-
-	node.append("text")
+	node
+		.append("text")
 		.attr("x", function(d){
 			if(d.parent)
 				return (MARGIN / 2 + HOFFSET) * d.width;
@@ -131,6 +151,15 @@ function layoutGraph(graph, width, height)
 		.text(labelfun)
 		.attr("class", "label");
 
+    // apply node positions
+	node
+		.append("title")
+		.text(idfun);
+
+	node.transition()
+		 .attr("transform", function(d) { return "translate(" + d.x + " " + d.y + ")"});
+
+
 	var port = node.selectAll(".port")
 	  .data(function(d) { return d.ports; })
 	  .enter()
@@ -140,18 +169,8 @@ function layoutGraph(graph, width, height)
     .attr("height", 2)
   	.attr("x", 0)
   	.attr("y", 0)
-
-  port.append("title")
-    .text(function(d) { return d.id; });
-
-	layouter
-		.on("finish", function(){ layouter_on_finish(layouter, node, link, port); })
-    .start()
-
-}
-
-function layouter_on_finish(layouter, node, link, port)
-{
+	  .append("title")
+	  .text(function(d) { return d.id; });
 
 	  // apply edge routes
     link.transition().attr("d", function(d) {

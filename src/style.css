@@ -1,24 +1,34 @@
-g.leaf > rect {
-  stroke: #fff;
-  stroke-width: 1px;
-  opacity: .5;
+body > * {
+  text-align: center;
 }
 
-g.compound > rect {
-  opacity: 0.1;
+table, button, svg, textarea {
+    width: 100%;
+    height: 100%;
+}
+
+td {
+  border: 1px solid #888;
 }
 
 .node {
+  stroke: #000;
+  stroke-width: 1px;
+  stroke-opacity: 1;
+  opacity: .5;
 }
 
 .link {
-  stroke: #999;
-  stroke-opacity: .6;
+  stroke: #888;
+  stroke-width: 1px;
+  stroke-opacity: 1;
   fill: none;
+  opacity: .5;
 }
 
 .port {
   stroke: #000;
-  width: 1px;
-  opacity: .6;
+  stroke-width: 1px;
+  stroke-opacity: 1;
+  opacity: 1;
 }

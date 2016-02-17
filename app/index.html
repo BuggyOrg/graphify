@@ -13,9 +13,21 @@
 
 <body>
 
-	<textarea id="txtInput" rows="50" cols="60">
-	</textarea>
-	<button id="btnInput">INPUT</button>
+	<table>
+		<tr>
+			<td height="90%" width="25%">
+				<textarea id="txtInput"></textarea>
+			</td>
+			<td id="tdOutput" rowspan="2">
+				<svg id="svgOutput"></svg>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<button id="btnInput">Perform Layout</button>
+			</td>
+		</tr>
+	</table>
 
 	<script src="../app/layout.js"></script>
 
