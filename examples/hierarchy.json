@@ -2,38 +2,35 @@
   "id": "root",
   "children": [{
     "id": "n1",
-    "labels": [ { "text": "STD_IN" } ],
-    "width": 100,
-    "height": 200
+    "labels": [ { "text": "STD_IN" } ]
   },{
     "id": "n2",
-    "labels": [ { "text": "ADD" } ],
+    "labels": [ { "text": "INC" } ],
     "children": [{
-      "id": "n3",
-      "labels": [ { "text": "CONST" } ],
-      "width": 40,
-      "height": 40
-    },{
-      "id": "n4",
-      "labels": [ { "text": "STD_IN" } ],
-      "width": 40,
-      "height": 40
-    },{
       "id": "n5",
-      "labels": [ { "text": "INC" } ],
-      "width": 40,
-      "height": 40}
+      "labels": [ { "text": "ADD" } ]},{
+      "id": "n3",
+      "labels": [ { "text": "CONST" } ]
+    }
     ],
     "edges": [{
       "id": "e4",
       "source": "n3",
-      "target": "n4"
+      "target": "n5"
     }]
+  },{
+    "id": "n4",
+    "labels": [ { "text": "STD_OUT" } ]
   }],
   "edges": [{
     "id": "e1",
     "labels": [ { "text": "e1" } ],
     "source": "n1",
     "target": "n2"
+  },{
+    "id": "e2",
+    "labels": [ { "text": "e2" } ],
+    "source": "n2",
+    "target": "n4"
   }]
 }

@@ -1,23 +1,20 @@
 
-
-var MARGIN = 0.5
-var HOFFSET = -0.1
-var VOFFSET = -0.6
+/* Layout options */
+var MARGIN = 1.0
+var PORT_SIZE = 5.0
 
 /* Uncomment for automatic refresh */
-//document.getElementById('txtInput').onkeyup = Update
-//document.getElementById('txtInput').onchange = Update
-//window.onload = Update
+//	document.getElementById('txtInput').onkeyup = update
+//	document.getElementById('txtInput').onchange = update
+//	window.onload = Update
 
-document.getElementById('btnInput').onclick = Update
+document.getElementById('btnInput').onclick = update
 
-function viewport()
-{
-	var e = window,
-		a = 'inner';
+function viewport () {
+	var e = window, a = 'inner'
 	if (!('innerWidth' in window)) {
-		a = 'client';
-		e = document.documentElement || document.body;
+		a = 'client'
+		e = document.documentElement || document.body
 	}
 	return {
 		width: e[a + 'Width'],
@@ -25,28 +22,21 @@ function viewport()
 	}
 }
 
-function Update()
-{
-
+function update () {
 	/* read graph input */
 	var text = document.getElementById('txtInput').value
 	var graph = JSON.parse(text)
 
-	if(!graph.nodes)
-		return;
-
 	/* measure size of leaf boxes */
-	graph.nodes.forEach(measureSizeRec)
+	measureSizeRec(graph)
 
-	var width = viewport().width;
-	var height = viewport().height;
-
-	layoutGraph(graph, width, height)
+	doLayout(graph)
 
 }
 
-function layoutGraph(graph, width, height)
-{
+function doLayout (graph){
+	var width = viewport().width;
+	var height = viewport().height;
 
 	/* remove all svg elements */
 	var allSvgs = document.querySelectorAll("svg");
@@ -71,134 +61,146 @@ function layoutGraph(graph, width, height)
 		.attr("width", width)
 		.attr("height", height)
     .call(zoom)
-		.append("g")
 
 	// group shizzle
-	var root = svg.append("g")
+	var root = svg
 
-	var layouter = klay.d3adapter();
+	var klay = require("klayjs")
 
-	layouter
-		.nodes(graph.nodes)
-		.links(graph.links)
-		.size([width, height])
-		.transformGroup(root)
-		.options({
-			edgeRouting: "ORTHOGONAL",
-        intCoordinates: false
-		})
-    .defaultPortSize([2, 2])
+	setupRec(graph)
 
-	var idfun = function(d) { return d.id; };
-	var labelfun = function(d) { return d.children ? "" : (d.name || "") };
+	klay.layout({
+	  graph: graph,
+	  options: {
+			spacing: 50,
+	    layoutHierarchy: true,
+	    direction: "RIGHT",
+	    edgeRouting: "ORTHOGONAL",
+	    nodeLayering: "NETWORK_SIMPLEX",
+	    nodePlace: "BRANDES_KOEPF",
+	    fixedAlignment: "NONE",
+	    crossMin: "LAYER_SWEEP",
+	    algorithm: "de.cau.cs.kieler.klay.layered"
+		},
+	  success: (g) => layouter_Success(g, root),
+	  error: (g) => layouter_Error(g, root),
+	})
 
-	var link = root.selectAll(".link")
-		.data(graph.links)
+}
+
+function setupRec(graph) {
+
+	(graph.ports || []).forEach(p => {
+		p.width = PORT_SIZE
+		p.height = PORT_SIZE
+	});
+
+	(graph.children || []).forEach(c => {
+		setupRec(c)
+	});
+
+}
+
+function layouter_Success(graph, root)
+{
+
+	var rootList = root
+		.selectAll('g')
+		.data([graph])
+    .enter()
+		.append('g');
+
+	buildGraph(rootList, graph)
+
+}
+
+function layouter_Error(graph, root)
+{
+	console.log(graph)
+}
+
+function buildGraph(data)
+{
+
+	var nodeData = data
+			.selectAll(".node")
+			.data(n => n.children || [])
+			.enter()
+			.append("g")
+			.attr("transform", n => "translate(" + (n.x || 0) + " " + (n.y || 0) + ")");
+
+	data
+			.append("rect")
+    	.attr("class", "node")
+			.attr("width", n => n.width || 0)
+			.attr("height", n => n.height || 0);
+
+	data
+		.filter(n => n.text)
+		.append("text")
+		.text(n => n.text)
+		.attr("x", n => (n.width - n.textWidth) / 2)
+		.attr("y", n => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
+		.attr("width", n => n.textWidth )
+		.attr("height", n => n.textHeight);
+
+	data
+		.selectAll(".link")
+		.data(n => n.edges || [])
 		.enter()
 		.append("path")
 		.attr("class", "link")
-		.attr("d", "M0 0")
-
-	var node = root.selectAll(".node")
-		.data(graph.nodes)
-		.enter()
-		.append("g")
-
-	node.append("rect")
-    .attr("class", "node")
-		.attr("width", function(d){ return d.width || 0; })
-		.attr("height", function(d){ return d.height || 0; })
-		.attr("x", 0)
-		.attr("y", 0)
-
-	node.append("title")
-		.text(function(d) { return d.name; });
-
-
-	node.append("text")
-		.attr("x", function(d){
-			if(d.parent)
-				return (MARGIN / 2 + HOFFSET) * d.width;
-			else
-				return 0;
-		})
-		.attr("y", function(d){
-				if(d.parent)
-					return (1 + MARGIN / 2 + VOFFSET) * d.height;
-				else
-					return 0;
-		})
-		.text(labelfun)
-		.attr("class", "label");
-
-	var port = node.selectAll(".port")
-	  .data(function(d) { return d.ports; })
-	  .enter()
-	  .append("rect")
-	  .attr("class", "port")
-    .attr("width", 2)
-    .attr("height", 2)
-  	.attr("x", 0)
-  	.attr("y", 0)
-
-  port.append("title")
-    .text(function(d) { return d.id; });
-
-	layouter
-		.on("finish", function(){ layouter_on_finish(layouter, node, link, port); })
-    .start()
-
-}
-
-function layouter_on_finish(layouter, node, link, port)
-{
-
-	  // apply edge routes
-    link.transition().attr("d", function(d) {
+		.attr("d", e => {
       var path = "";
-      path += "M" + d.sourcePoint.x + " " + d.sourcePoint.y + " ";
-      d.bendPoints.forEach(function(bp, i) {
-        path += "L" + bp.x + " " + bp.y + " ";
-      });
-      path += "L" + d.targetPoint.x + " " + d.targetPoint.y + " ";
+      path += "M" + e.sourcePoint.x + " " + e.sourcePoint.y + " ";
+        (e.bendPoints || []).forEach(function(bp, i) {
+          path += "L" + bp.x + " " + bp.y + " ";
+        });
+      path += "L" + e.targetPoint.x + " " + e.targetPoint.y + " ";
       return path;
     });
 
-    // apply node positions
-    node.transition()
-      .attr("transform", function(d) { return "translate(" + d.x + " " + d.y + ")"});
+		data
+			.selectAll(".port")
+		  .data(n => n.ports || [])
+		  .enter()
+		  .append("rect")
+		  .attr("class", "port")
+	  	.attr("x", p => p.x || 0)
+	  	.attr("y", p => p.y || 0)
+			.attr("width", p => p.width || 0)
+			.attr("height", p => p.height || 0)
 
-    // apply port positions
-    port.transition()
-      .attr("x", function(d) { return d.x; })
-      .attr("y", function(d) { return d.y; });
+		if(!nodeData.empty())
+			buildGraph(nodeData)
 
 }
 
-function measureSizeRec(obj)
+function measureSizeRec(node, parent)
 {
 
-	obj.width = 0;
-	obj.height = 0;
-
 	// save parent pointer
-	obj.parent = parent;
+	node.parent = parent;
 
-	if(obj.children)
+	if(node.children)
 	{
-		obj.children.forEach(function(child) { measureSizeRec(child, obj) })
+		node.children.forEach(function(child) { measureSizeRec(child, node) })
 	}
-	else if(obj.name)
+
+	if(node.labels && node.labels.length > 0)
 	{
-		var dim = d3MeasureText(obj.name, "label")
-		obj.width = (1 + MARGIN) * dim.width
-		obj.height = (1 + MARGIN) * dim.height
+		node.text = node.labels[0].text
+		var dim = d3MeasureText(node.text, "label")
+		node.textWidth = dim.width
+		node.textHeight = dim.height
+		node.width = node.width || (1 + MARGIN) * dim.width
+		node.height = node.height || (1 + MARGIN) * dim.height
 	}
 
 }
 
 function redraw(svg)
 {
-  svg.attr("transform", "translate(" + d3.event.translate + ")"
-                          + " scale(" + d3.event.scale + ")");
+  /*svg.attr("transform", "translate(" + d3.event.translate + ")"
+                          + " scale(" + d3.event.scale + ")");*/
 }

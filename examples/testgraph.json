@@ -1,36 +1,60 @@
+
 {
-  "nodes": [{
-    "name": "Myriel",
-    "ports": [{
-      "id": "p1",
-      "properties": {
-        "portSide": "EAST"
-      }
-    }],
-    "properties": {
-      "portConstraints": "FIXED_SIDE"
-    }
-  }, {
-    "name": "Napoleon",
-    "ports": [{
-      "id": "p2",
-      "properties": {
-        "portSide": "WEST"
-      }
-    }],
-    "properties": {
-      "portConstraints": "FIXED_SIDE"
-    }
-  }],
-  "links": [{
-    "source": 0,
-    "sourcePort": "p1",
-    "targetPort": "p2",
-    "target": 1
+  "id": "root",
+  "children": [{
+    "id": "n1",
+    "labels": [ { "text": "STD_IN" } ],
+		"ports": [{ "id": "n1_out" }]
   },{
-    "source": 0,
-    "sourcePort": "p1",
-    "targetPort": "p2",
-    "target": 1
+    "id": "n2",
+    "labels": [ { "text": "INC" } ],
+		"ports": [{ "id": "n2_in" }, { "id": "n2_out" }],
+    "children": [{
+      "id": "n4",
+      "labels": [ { "text": "ADD" } ],
+			"ports": [{ "id": "n4_in2" }, { "id": "n4_in1" }, { "id": "n4_out" }]
+		},{
+      "id": "n5",
+      "labels": [ { "text": "CONST" } ],
+			"ports": [{ "id": "n5_out" }]
+    }],
+    "edges": [{
+      "id": "n2n4",
+      "source": "n2",
+			"sourcePort": "n2_in",
+      "target": "n4",
+			"targetPort": "n4_in1"
+    },{
+      "id": "n5n4",
+      "source": "n5",
+			"sourcePort": "n5_out",
+      "target": "n4",
+			"targetPort": "n4_in2"
+		},{
+      "id": "n4n2",
+      "source": "n4",
+			"sourcePort": "n4_out",
+      "target": "n2",
+			"targetPort": "n2_out"
+		}]
+  },{
+    "id": "n3",
+    "labels": [ { "text": "STD_OUT" } ],
+		"ports": [{ "id": "n3_in"}]
+  }],
+  "edges": [{
+    "id": "n1n2",
+    "source": "n1",
+		"sourcePort": "n1_out",
+    "target": "n2",
+		"targetPort": "n2_in"
+  },{
+    "id": "n2n3",
+    "source": "n2",
+		"sourcePort": "n2_out",
+    "target": "n3",
+		"targetPort": "n3_in"
   }]
 }
+
+				

@@ -13,22 +13,20 @@ td {
 
 .node {
   stroke: #000;
-  stroke-width: 1px;
-  stroke-opacity: 1;
-  opacity: .5;
+  stroke-width: 3px;
+  stroke-opacity: .333;
+  opacity: .333;
 }
 
 .link {
-  stroke: #888;
-  stroke-width: 1px;
-  stroke-opacity: 1;
+  stroke: #555;
+  stroke-width: 3px;
+  stroke-opacity: .666;
   fill: none;
-  opacity: .5;
+  opacity: .666;
 }
 
 .port {
-  stroke: #000;
-  stroke-width: 1px;
-  stroke-opacity: 1;
-  opacity: 1;
+    stroke: #000;
+    opacity: .6;
 }
