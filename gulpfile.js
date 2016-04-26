@@ -6,6 +6,18 @@ var browserify = require('browserify')
 var watchify = require('watchify')
 
 function compile (watch) {
+  var bundler = browserify('./src/layout.js', { debug: true }).transform('babelify', {presets: ['es2015']})
+
+  bundler.bundle()
+    .on('error', function (err) { console.error(err); this.emit('end') })
+    .pipe(source('layout.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./app'))
+}
+
+function watch () {
   var bundler = watchify(browserify('./src/layout.js', { debug: true }).transform('babelify', {presets: ['es2015']}))
 
   function rebundle () {
@@ -26,10 +38,6 @@ function compile (watch) {
   }
 
   rebundle()
-}
-
-function watch () {
-  return compile(true)
 }
 
 gulp.task('build', function () { return compile() })

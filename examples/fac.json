@@ -1,0 +1,513 @@
+{
+  "id": "root",
+  "children": [
+    {
+      "id": "in",
+      "labels": [
+        {
+          "text": "in"
+        }
+      ],
+      "ports": [
+        {
+          "id": "in_output_out"
+        }
+      ]
+    },
+    {
+      "id": "strToNum",
+      "labels": [
+        {
+          "text": "strToNum"
+        }
+      ],
+      "ports": [
+        {
+          "id": "strToNum_input_in"
+        },
+        {
+          "id": "strToNum_output_out"
+        }
+      ]
+    },
+    {
+      "id": "fac",
+      "labels": [
+        {
+          "text": "fac"
+        }
+      ],
+      "ports": [
+        {
+          "id": "fac_n_in"
+        },
+        {
+          "id": "fac_fac_out"
+        }
+      ],
+      "children": [
+        {
+          "id": "fac:is1",
+          "labels": [
+            {
+              "text": "fac:is1"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:is1_i1_in"
+            },
+            {
+              "id": "fac:is1_i2_in"
+            },
+            {
+              "id": "fac:is1_eq_out"
+            }
+          ]
+        },
+        {
+          "id": "fac:c",
+          "labels": [
+            {
+              "text": "fac:c"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:c_output_out"
+            }
+          ]
+        },
+        {
+          "id": "fac:choose",
+          "labels": [
+            {
+              "text": "fac:choose"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:choose_input_in"
+            },
+            {
+              "id": "fac:choose_control_in"
+            },
+            {
+              "id": "fac:choose_outTrue_out"
+            },
+            {
+              "id": "fac:choose_outFalse_out"
+            }
+          ]
+        },
+        {
+          "id": "fac:c_dec",
+          "labels": [
+            {
+              "text": "fac:c_dec"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:c_dec_output_out"
+            }
+          ]
+        },
+        {
+          "id": "fac:dec",
+          "labels": [
+            {
+              "text": "fac:dec"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:dec_s1_in"
+            },
+            {
+              "id": "fac:dec_s2_in"
+            },
+            {
+              "id": "fac:dec_sum_out"
+            }
+          ]
+        },
+        {
+          "id": "fac:recFac",
+          "labels": [
+            {
+              "text": "fac:recFac"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:recFac_n_in"
+            },
+            {
+              "id": "fac:recFac_fac_out"
+            }
+          ],
+          "children": [
+            {
+              "id": "fac:recFac:is1",
+              "labels": [
+                {
+                  "text": "fac:recFac:is1"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:is1_i1_in"
+                },
+                {
+                  "id": "fac:recFac:is1_i2_in"
+                },
+                {
+                  "id": "fac:recFac:is1_eq_out"
+                }
+              ]
+            },
+            {
+              "id": "fac:recFac:c",
+              "labels": [
+                {
+                  "text": "fac:recFac:c"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:c_output_out"
+                }
+              ]
+            },
+            {
+              "id": "fac:recFac:choose",
+              "labels": [
+                {
+                  "text": "fac:recFac:choose"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:choose_input_in"
+                },
+                {
+                  "id": "fac:recFac:choose_control_in"
+                },
+                {
+                  "id": "fac:recFac:choose_outTrue_out"
+                },
+                {
+                  "id": "fac:recFac:choose_outFalse_out"
+                }
+              ]
+            },
+            {
+              "id": "fac:recFac:c_dec",
+              "labels": [
+                {
+                  "text": "fac:recFac:c_dec"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:c_dec_output_out"
+                }
+              ]
+            },
+            {
+              "id": "fac:recFac:dec",
+              "labels": [
+                {
+                  "text": "fac:recFac:dec"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:dec_s1_in"
+                },
+                {
+                  "id": "fac:recFac:dec_s2_in"
+                },
+                {
+                  "id": "fac:recFac:dec_sum_out"
+                }
+              ]
+            },
+            {
+              "id": "fac:recFac:recFac",
+              "labels": [
+                {
+                  "text": "fac:recFac:recFac"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:recFac_n_in"
+                },
+                {
+                  "id": "fac:recFac:recFac_fac_out"
+                }
+              ]
+            },
+            {
+              "id": "fac:recFac:mul",
+              "labels": [
+                {
+                  "text": "fac:recFac:mul"
+                }
+              ],
+              "ports": [
+                {
+                  "id": "fac:recFac:mul_m1_in"
+                },
+                {
+                  "id": "fac:recFac:mul_m2_in"
+                },
+                {
+                  "id": "fac:recFac:mul_product_out"
+                }
+              ]
+            }
+          ],
+          "edges": [
+            {
+              "id": "fac:recFacfac:recFac:is1",
+              "source": "fac:recFac",
+              "sourcePort": "fac:recFac_n_out",
+              "target": "fac:recFac:is1",
+              "targetPort": "fac:recFac:is1_i1_in"
+            },
+            {
+              "id": "fac:recFac:cfac:recFac:is1",
+              "source": "fac:recFac:c",
+              "sourcePort": "fac:recFac:c_output_out",
+              "target": "fac:recFac:is1",
+              "targetPort": "fac:recFac:is1_i2_in"
+            },
+            {
+              "id": "fac:recFacfac:recFac:choose",
+              "source": "fac:recFac",
+              "sourcePort": "fac:recFac_n_out",
+              "target": "fac:recFac:choose",
+              "targetPort": "fac:recFac:choose_input_in"
+            },
+            {
+              "id": "fac:recFac:is1fac:recFac:choose",
+              "source": "fac:recFac:is1",
+              "sourcePort": "fac:recFac:is1_eq_out",
+              "target": "fac:recFac:choose",
+              "targetPort": "fac:recFac:choose_control_in"
+            },
+            {
+              "id": "fac:recFac:choosefac:recFac",
+              "source": "fac:recFac:choose",
+              "sourcePort": "fac:recFac:choose_outTrue_out",
+              "target": "fac:recFac",
+              "targetPort": "fac:recFac_fac_in"
+            },
+            {
+              "id": "fac:recFac:choosefac:recFac:dec",
+              "source": "fac:recFac:choose",
+              "sourcePort": "fac:recFac:choose_outFalse_out",
+              "target": "fac:recFac:dec",
+              "targetPort": "fac:recFac:dec_s1_in"
+            },
+            {
+              "id": "fac:recFac:c_decfac:recFac:dec",
+              "source": "fac:recFac:c_dec",
+              "sourcePort": "fac:recFac:c_dec_output_out",
+              "target": "fac:recFac:dec",
+              "targetPort": "fac:recFac:dec_s2_in"
+            },
+            {
+              "id": "fac:recFac:decfac:recFac:recFac",
+              "source": "fac:recFac:dec",
+              "sourcePort": "fac:recFac:dec_sum_out",
+              "target": "fac:recFac:recFac",
+              "targetPort": "fac:recFac:recFac_n_in"
+            },
+            {
+              "id": "fac:recFac:choosefac:recFac:mul",
+              "source": "fac:recFac:choose",
+              "sourcePort": "fac:recFac:choose_outFalse_out",
+              "target": "fac:recFac:mul",
+              "targetPort": "fac:recFac:mul_m1_in"
+            },
+            {
+              "id": "fac:recFac:recFacfac:recFac:mul",
+              "source": "fac:recFac:recFac",
+              "sourcePort": "fac:recFac:recFac_fac_out",
+              "target": "fac:recFac:mul",
+              "targetPort": "fac:recFac:mul_m2_in"
+            },
+            {
+              "id": "fac:recFac:mulfac:recFac",
+              "source": "fac:recFac:mul",
+              "sourcePort": "fac:recFac:mul_product_out",
+              "target": "fac:recFac",
+              "targetPort": "fac:recFac_fac_in"
+            }
+          ]
+        },
+        {
+          "id": "fac:mul",
+          "labels": [
+            {
+              "text": "fac:mul"
+            }
+          ],
+          "ports": [
+            {
+              "id": "fac:mul_m1_in"
+            },
+            {
+              "id": "fac:mul_m2_in"
+            },
+            {
+              "id": "fac:mul_product_out"
+            }
+          ]
+        }
+      ],
+      "edges": [
+        {
+          "id": "facfac:is1",
+          "source": "fac",
+          "sourcePort": "fac_n_out",
+          "target": "fac:is1",
+          "targetPort": "fac:is1_i1_in"
+        },
+        {
+          "id": "fac:cfac:is1",
+          "source": "fac:c",
+          "sourcePort": "fac:c_output_out",
+          "target": "fac:is1",
+          "targetPort": "fac:is1_i2_in"
+        },
+        {
+          "id": "facfac:choose",
+          "source": "fac",
+          "sourcePort": "fac_n_out",
+          "target": "fac:choose",
+          "targetPort": "fac:choose_input_in"
+        },
+        {
+          "id": "fac:is1fac:choose",
+          "source": "fac:is1",
+          "sourcePort": "fac:is1_eq_out",
+          "target": "fac:choose",
+          "targetPort": "fac:choose_control_in"
+        },
+        {
+          "id": "fac:choosefac",
+          "source": "fac:choose",
+          "sourcePort": "fac:choose_outTrue_out",
+          "target": "fac",
+          "targetPort": "fac_fac_in"
+        },
+        {
+          "id": "fac:choosefac:dec",
+          "source": "fac:choose",
+          "sourcePort": "fac:choose_outFalse_out",
+          "target": "fac:dec",
+          "targetPort": "fac:dec_s1_in"
+        },
+        {
+          "id": "fac:c_decfac:dec",
+          "source": "fac:c_dec",
+          "sourcePort": "fac:c_dec_output_out",
+          "target": "fac:dec",
+          "targetPort": "fac:dec_s2_in"
+        },
+        {
+          "id": "fac:decfac:recFac",
+          "source": "fac:dec",
+          "sourcePort": "fac:dec_sum_out",
+          "target": "fac:recFac",
+          "targetPort": "fac:recFac_n_in"
+        },
+        {
+          "id": "fac:choosefac:mul",
+          "source": "fac:choose",
+          "sourcePort": "fac:choose_outFalse_out",
+          "target": "fac:mul",
+          "targetPort": "fac:mul_m1_in"
+        },
+        {
+          "id": "fac:recFacfac:mul",
+          "source": "fac:recFac",
+          "sourcePort": "fac:recFac_fac_out",
+          "target": "fac:mul",
+          "targetPort": "fac:mul_m2_in"
+        },
+        {
+          "id": "fac:mulfac",
+          "source": "fac:mul",
+          "sourcePort": "fac:mul_product_out",
+          "target": "fac",
+          "targetPort": "fac_fac_in"
+        }
+      ]
+    },
+    {
+      "id": "numToStr",
+      "labels": [
+        {
+          "text": "numToStr"
+        }
+      ],
+      "ports": [
+        {
+          "id": "numToStr_input_in"
+        },
+        {
+          "id": "numToStr_output_out"
+        }
+      ]
+    },
+    {
+      "id": "out",
+      "labels": [
+        {
+          "text": "out"
+        }
+      ],
+      "ports": [
+        {
+          "id": "out_input_in"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "instrToNum",
+      "source": "in",
+      "sourcePort": "in_output_out",
+      "target": "strToNum",
+      "targetPort": "strToNum_input_in"
+    },
+    {
+      "id": "strToNumfac",
+      "source": "strToNum",
+      "sourcePort": "strToNum_output_out",
+      "target": "fac",
+      "targetPort": "fac_n_in"
+    },
+    {
+      "id": "facnumToStr",
+      "source": "fac",
+      "sourcePort": "fac_fac_out",
+      "target": "numToStr",
+      "targetPort": "numToStr_input_in"
+    },
+    {
+      "id": "numToStrout",
+      "source": "numToStr",
+      "sourcePort": "numToStr_output_out",
+      "target": "out",
+      "targetPort": "out_input_in"
+    }
+  ]
+}

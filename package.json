@@ -2,6 +2,10 @@
   "name": "@buggyorg/graphify",
   "description": "visualize the graph of an buggy network graph",
   "version": "0.1.0",
+  "scripts": {
+    "prepublish": "gulp build",
+    "test": "echo no tests"
+  },
   "bin": {
     "buggy-graphify": "./src/cli.js"
   },
