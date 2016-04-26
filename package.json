@@ -7,7 +7,7 @@
     "test": "echo no tests"
   },
   "bin": {
-    "buggy-graphify": "./src/cli.js"
+    "graphify": "./src/cli.js"
   },
   "dependencies": {
     "browserify": "^13.0.0",
