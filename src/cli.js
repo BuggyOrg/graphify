@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 var Nightmare = require('nightmare')
 var fs = require('fs')
 var vo = require('vo')
