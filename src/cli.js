@@ -15,7 +15,7 @@ var graphifyPath = path.normalize(path.join(__dirname, '../'))
 /* read input graph */
 var inputPromise = null
 if (arg0) {
-  var inputPath = path.join(graphifyPath, arg0)
+  var inputPath = arg0
   inputPromise = Promise.resolve(fs.readFileSync(inputPath, 'utf8'))
 } else {
   inputPromise = getStdin()
