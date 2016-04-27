@@ -31,7 +31,6 @@ function update () {
 	measureSizeRec(graph)
 
 	doLayout(graph)
-
 }
 
 function doLayout (graph){
@@ -44,13 +43,16 @@ function doLayout (graph){
 		svg.parentNode.removeChild(svg)
 	})
 
-	var zoom = d3.behavior.zoom()
-	    .on("zoom", function() { redraw(svg) });
-
 	width = d3.select("#tdOutput").width
 	height = d3.select("#tdOutput").height
 
-	var svg = d3.select("#tdOutput")
+	var svg;
+	var zoom = d3.behavior.zoom()
+	    .on("zoom", function() {			
+			svg.select('g').attr("transform", `translate(${d3.event.translate}) scale(${d3.event.scale})`);
+		})
+						 
+	svg = d3.select("#tdOutput")
 		.append("svg")
 		.attr("id", "svgOutput")
 		.attr("xmlns", "http://www.w3.org/2000/svg")
@@ -60,7 +62,7 @@ function doLayout (graph){
 		.attr("baseprofile", "full")
 		.attr("width", width)
 		.attr("height", height)
-    .call(zoom)
+    	.call(zoom)
 
 	// group shizzle
 	var root = svg
@@ -197,10 +199,4 @@ function measureSizeRec(node, parent)
 		node.height = node.height || (1 + MARGIN) * dim.height
 	}
 
-}
-
-function redraw(svg)
-{
-  /*svg.attr("transform", "translate(" + d3.event.translate + ")"
-                          + " scale(" + d3.event.scale + ")");*/
 }
