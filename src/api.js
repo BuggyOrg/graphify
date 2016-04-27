@@ -3,7 +3,6 @@ var Nightmare = require('nightmare')
 var fs = require('fs')
 var vo = require('vo')
 var path = require('path')
-require("babel-polyfill")
 
 module.exports = function(input, cssFile = 'src/style.css') {
   var graphifyPath = path.normalize(path.join(__dirname, '../'))
