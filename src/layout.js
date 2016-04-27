@@ -123,20 +123,19 @@ function layouter_Error(graph, root)
 
 function buildGraph(data)
 {
-
-	var nodeData = data
+	    var nodeData = data
 			.selectAll(".node")
 			.data(n => n.children || [])
-			.enter()
-			.append("g")
-			.attr("transform", n => "translate(" + (n.x || 0) + " " + (n.y || 0) + ")");
-
+			  .enter()
+			  .append("g")
+			  .attr("transform", n => "translate(" + (n.x || 0) + " " + (n.y || 0) + ")")
+			  
 	data
 			.append("rect")
-    	.attr("class", "node")
+		    .attr("class", n => `node ${(n.children || []).length > 0 ? 'compound' : ''}`)
 			.attr("width", n => n.width || 0)
 			.attr("height", n => n.height || 0);
-
+			
 	data
 		.filter(n => n.text)
 		.append("text")
@@ -145,7 +144,7 @@ function buildGraph(data)
 		.attr("y", n => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
 		.attr("width", n => n.textWidth )
 		.attr("height", n => n.textHeight);
-
+			
 	data
 		.selectAll(".link")
 		.data(n => n.edges || [])
@@ -167,15 +166,14 @@ function buildGraph(data)
 		  .data(n => n.ports || [])
 		  .enter()
 		  .append("rect")
-		  .attr("class", "port")
+		  .attr("class", p => `port ${/.+_out/.test(p.id) ? 'out' : 'in'}`)
 	  	.attr("x", p => p.x || 0)
 	  	.attr("y", p => p.y || 0)
 			.attr("width", p => p.width || 0)
 			.attr("height", p => p.height || 0)
-
+			
 		if(!nodeData.empty())
 			buildGraph(nodeData)
-
 }
 
 function measureSizeRec(node, parent)
