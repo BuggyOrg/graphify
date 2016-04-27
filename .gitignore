@@ -1,4 +1,5 @@
 node_modules
 app/layout.js
 app/layout.js.map
+lib
 *~
