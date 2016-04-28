@@ -31,7 +31,6 @@ function update () {
 	measureSizeRec(graph)
 
 	doLayout(graph)
-
 }
 
 function doLayout (graph){
@@ -44,13 +43,16 @@ function doLayout (graph){
 		svg.parentNode.removeChild(svg)
 	})
 
-	var zoom = d3.behavior.zoom()
-	    .on("zoom", function() { redraw(svg) });
-
 	width = d3.select("#tdOutput").width
 	height = d3.select("#tdOutput").height
 
-	var svg = d3.select("#tdOutput")
+	var svg;
+	var zoom = d3.behavior.zoom()
+	    .on("zoom", function() {			
+			svg.select('g').attr("transform", `translate(${d3.event.translate}) scale(${d3.event.scale})`);
+		})
+						 
+	svg = d3.select("#tdOutput")
 		.append("svg")
 		.attr("id", "svgOutput")
 		.attr("xmlns", "http://www.w3.org/2000/svg")
@@ -60,7 +62,7 @@ function doLayout (graph){
 		.attr("baseprofile", "full")
 		.attr("width", width)
 		.attr("height", height)
-    .call(zoom)
+    	.call(zoom)
 
 	// group shizzle
 	var root = svg
@@ -74,7 +76,7 @@ function doLayout (graph){
 	  options: {
 			spacing: 50,
 	    layoutHierarchy: true,
-	    direction: "RIGHT",
+	    direction: "DOWN",
 	    edgeRouting: "ORTHOGONAL",
 	    nodeLayering: "NETWORK_SIMPLEX",
 	    nodePlace: "BRANDES_KOEPF",
@@ -121,20 +123,19 @@ function layouter_Error(graph, root)
 
 function buildGraph(data)
 {
-
-	var nodeData = data
+	    var nodeData = data
 			.selectAll(".node")
 			.data(n => n.children || [])
-			.enter()
-			.append("g")
-			.attr("transform", n => "translate(" + (n.x || 0) + " " + (n.y || 0) + ")");
-
+			  .enter()
+			  .append("g")
+			  .attr("transform", n => "translate(" + (n.x || 0) + " " + (n.y || 0) + ")")
+			  
 	data
 			.append("rect")
-    	.attr("class", "node")
+		    .attr("class", n => `node ${(n.children || []).length > 0 ? 'compound' : ''}`)
 			.attr("width", n => n.width || 0)
 			.attr("height", n => n.height || 0);
-
+			
 	data
 		.filter(n => n.text)
 		.append("text")
@@ -143,7 +144,7 @@ function buildGraph(data)
 		.attr("y", n => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
 		.attr("width", n => n.textWidth )
 		.attr("height", n => n.textHeight);
-
+			
 	data
 		.selectAll(".link")
 		.data(n => n.edges || [])
@@ -165,15 +166,14 @@ function buildGraph(data)
 		  .data(n => n.ports || [])
 		  .enter()
 		  .append("rect")
-		  .attr("class", "port")
+		  .attr("class", p => `port ${/.+_out/.test(p.id) ? 'out' : 'in'}`)
 	  	.attr("x", p => p.x || 0)
 	  	.attr("y", p => p.y || 0)
 			.attr("width", p => p.width || 0)
 			.attr("height", p => p.height || 0)
-
+			
 		if(!nodeData.empty())
 			buildGraph(nodeData)
-
 }
 
 function measureSizeRec(node, parent)
@@ -197,10 +197,4 @@ function measureSizeRec(node, parent)
 		node.height = node.height || (1 + MARGIN) * dim.height
 	}
 
-}
-
-function redraw(svg)
-{
-  /*svg.attr("transform", "translate(" + d3.event.translate + ")"
-                          + " scale(" + d3.event.scale + ")");*/
 }

@@ -14,19 +14,37 @@ td {
 .node {
   stroke: #000;
   stroke-width: 3px;
-  stroke-opacity: .333;
-  opacity: .333;
+  fill: #fff;
+}
+
+.node.compound {
+  stroke-opacity: 0.5;
+  fill-opacity: 0.2;
+  fill: #000;
+}
+
+text {
+  font-family: sans-serif;
 }
 
 .link {
-  stroke: #555;
+  stroke: #333;
   stroke-width: 3px;
-  stroke-opacity: .666;
+  stroke-opacity: 0.5;
   fill: none;
-  opacity: .666;
+  cursor: pointer;
 }
 
 .port {
     stroke: #000;
-    opacity: .6;
+    fill: none;
+    z-index: 42;
+}
+
+.port.out {
+  fill: darkred;
+}
+
+.port.in {
+  fill: green;
 }
