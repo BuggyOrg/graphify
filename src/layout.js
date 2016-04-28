@@ -76,7 +76,7 @@ function doLayout (graph){
 	  options: {
 			spacing: 50,
 	    layoutHierarchy: true,
-	    direction: "RIGHT",
+	    direction: "DOWN",
 	    edgeRouting: "ORTHOGONAL",
 	    nodeLayering: "NETWORK_SIMPLEX",
 	    nodePlace: "BRANDES_KOEPF",
