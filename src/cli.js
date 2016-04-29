@@ -1,29 +1,33 @@
 #!/usr/bin/env node
-var Nightmare = require('nightmare')
-var fs = require('fs')
-var vo = require('vo')
-var getStdin = require('get-stdin')
 
-// cli arguments and defaults
-var arg0 = process.argv[2] || 'examples/testgraph.json'
-var arg1 = process.argv[3] || 'src/style.css'
+import program from 'commander'
+import Nightmare from 'nightmare'
+import fs from 'fs'
+import vo from 'vo'
+import getStdin from 'get-stdin'
+import path from 'path'
 
-/* read home folder */
-var path = require('path')
-var graphifyPath = path.normalize(path.join(__dirname, '../'))
+program
+  .version(JSON.parse(fs.readFileSync(path.join(__dirname, '/../package.json')))['version'])
+  .option('-f, --graphfile <graph file>', 'Set graph file to convert. If none is given, stdin is read.')
+  .option('-o, --out <svg output file>', 'Set a custom output path. If none is given, stdout is used.')
+  .option('--style <css file>', 'Use a custom stylesheet.')
+  .parse(process.argv)
+
+// read home folder
+const graphifyPath = path.normalize(path.join(__dirname, '../'))
 
 /* read input graph */
-var inputPromise = null
-if (arg0) {
-  var inputPath = arg0
-  inputPromise = Promise.resolve(fs.readFileSync(inputPath, 'utf8'))
+let inputPromise
+if (program.graphfile) {
+  inputPromise = Promise.resolve(fs.readFileSync(program.graphfile, 'utf8'))
 } else {
   inputPromise = getStdin()
 }
 
 inputPromise.then((input) => {
   /* read style sheet */
-  var cssPath = path.join(graphifyPath, arg1)
+  var cssPath = program.style || path.join(graphifyPath, 'src/style.css')
   var css = fs.readFileSync(cssPath, 'utf8')
 
   vo(function * () {
@@ -48,10 +52,16 @@ inputPromise.then((input) => {
         return svg.outerHTML
       }, css)
 
-    console.log(result)
+    if (program.out) {
+      fs.writeFileSync(program.out, result, 'utf8')
+    } else {
+      process.stdout.write(result)
+    }
 
     yield nightmare.end()
   })(function (err, result) {
-    if (err) return console.log(err)
+    if (err) {
+      console.error(err)
+    }
   })
 })
