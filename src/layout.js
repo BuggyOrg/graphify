@@ -110,18 +110,18 @@ function layouter_Error (graph, root) {
 }
 
 function buildGraph (data) {
+  data
+    .append('rect')
+    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because `selectAll('.node')` would behave bad if we use 'node'
+    .attr('width', (n) => n.width || 0)
+    .attr('height', (n) => n.height || 0)
+
   var nodeData = data
     .selectAll('.node')
     .data((n) => n.children || [])
     .enter()
     .append('g')
     .attr('transform', (n) => 'translate(' + (n.x || 0) + ' ' + (n.y || 0) + ')')
-
-  data
-    .append('rect')
-    .attr('class', (n) => `node ${(n.children || []).length > 0 ? 'compound' : ''}`)
-    .attr('width', (n) => n.width || 0)
-    .attr('height', (n) => n.height || 0)
 
   data
     .filter((n) => n.text)
@@ -137,31 +137,31 @@ function buildGraph (data) {
     .data((n) => n.edges || [])
     .enter()
     .append('path')
-    .attr('class', 'link')
+    .attr('class', 'st-link')
     .attr('d', (e) => {
       let path = `M ${e.sourcePoint.x} ${e.sourcePoint.y} `
       let bendPoints = e.bendPoints || []
       bendPoints.forEach((bp, i) => {
-        path += `L${bp.x} ${bp.y} `
+        path += `L ${bp.x} ${bp.y} `
       })
-      path += `L${e.targetPoint.x} ${e.targetPoint.y} `
+      path += `L ${e.targetPoint.x} ${e.targetPoint.y} `
       return path
     })
+
+  if (!nodeData.empty()) {
+    buildGraph(nodeData)
+  }
 
   data
     .selectAll('.port')
     .data((n) => n.ports || [])
     .enter()
     .append('rect')
-    .attr('class', (p) => `port ${/.+_out/.test(p.id) ? 'out' : 'in'}`)
+    .attr('class', (p) => `st-port ${/.+_out/.test(p.id) ? 'out' : 'in'}`)
     .attr('x', (p) => p.x || 0)
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
     .attr('height', (p) => p.height || 0)
-
-  if (!nodeData.empty()) {
-    buildGraph(nodeData)
-  }
 }
 
 function measureSizeRec (node, parent) {
