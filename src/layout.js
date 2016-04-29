@@ -25,6 +25,16 @@ function update () {
   let text = document.getElementById('txtInput').value
   let graph = JSON.parse(text)
 
+  /*
+  const addPadding = (node) => {
+    ;(node.children || []).forEach((n) => addPadding(n))
+    node.padding = {
+      top: 200
+    }
+  }
+  addPadding(graph)
+  */
+
   /* measure size of leaf boxes */
   measureSizeRec(graph)
 
@@ -112,7 +122,7 @@ function layouter_Error (graph, root) {
 function buildGraph (data) {
   data
     .append('rect')
-    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because `selectAll('.node')` would behave bad if we use 'node'
+    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
     .attr('width', (n) => n.width || 0)
     .attr('height', (n) => n.height || 0)
 
@@ -121,7 +131,7 @@ function buildGraph (data) {
     .data((n) => n.children || [])
     .enter()
     .append('g')
-    .attr('transform', (n) => 'translate(' + (n.x || 0) + ' ' + (n.y || 0) + ')')
+    .attr('transform', (n) => `translate(${n.x + (n.padding ? (n.padding.left || 0) : 0)} ${n.y + (n.padding ? (n.padding.top || 0) : 0)})`)
 
   data
     .filter((n) => n.text)
@@ -132,19 +142,21 @@ function buildGraph (data) {
     .attr('width', (n) => n.textWidth)
     .attr('height', (n) => n.textHeight)
 
-  data
-    .selectAll('.link')
-    .data((n) => n.edges || [])
+  data.selectAll('.link')
+    .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
     .enter()
     .append('path')
     .attr('class', 'st-link')
     .attr('d', (e) => {
-      let path = `M ${e.sourcePoint.x} ${e.sourcePoint.y} `
+      const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
+      const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
+
+      let path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
       let bendPoints = e.bendPoints || []
       bendPoints.forEach((bp, i) => {
-        path += `L ${bp.x} ${bp.y} `
+        path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
       })
-      path += `L ${e.targetPoint.x} ${e.targetPoint.y} `
+      path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop} `
       return path
     })
 
@@ -152,12 +164,11 @@ function buildGraph (data) {
     buildGraph(nodeData)
   }
 
-  data
-    .selectAll('.port')
-    .data((n) => n.ports || [])
+  data.selectAll('.port')
+    .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
     .enter()
     .append('rect')
-    .attr('class', (p) => `st-port ${/.+_out/.test(p.id) ? 'out' : 'in'}`)
+    .attr('class', (p) => `st-port ${/.+_out/.test(p.id) ? 'out' : 'in'}`) // 'st-port' because later uses of `selectAll('.port')` would behave bad if we use 'port'
     .attr('x', (p) => p.x || 0)
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
