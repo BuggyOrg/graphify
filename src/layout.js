@@ -112,57 +112,19 @@ function layouter_Success (graph, root) {
     .enter()
     .append('g')
 
-  buildGraph(rootList, graph)
+  buildGraph(rootList)
 }
 
 function layouter_Error (graph, root) {
   console.log(graph)
 }
 
-function buildGraph (data) {
+function buildGraph (data, parent) {
   data
     .append('rect')
     .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
     .attr('width', (n) => n.width || 0)
     .attr('height', (n) => n.height || 0)
-
-  var nodeData = data
-    .selectAll('.node')
-    .data((n) => n.children || [])
-    .enter()
-    .append('g')
-    .attr('transform', (n) => `translate(${n.x + (n.padding ? (n.padding.left || 0) : 0)} ${n.y + (n.padding ? (n.padding.top || 0) : 0)})`)
-
-  data
-    .filter((n) => n.text)
-    .append('text')
-    .text((n) => n.text)
-    .attr('x', (n) => (n.width - n.textWidth) / 2)
-    .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
-    .attr('width', (n) => n.textWidth)
-    .attr('height', (n) => n.textHeight)
-
-  data.selectAll('.link')
-    .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
-    .enter()
-    .append('path')
-    .attr('class', 'st-link')
-    .attr('d', (e) => {
-      const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
-      const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
-
-      let path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
-      let bendPoints = e.bendPoints || []
-      bendPoints.forEach((bp, i) => {
-        path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
-      })
-      path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop} `
-      return path
-    })
-
-  if (!nodeData.empty()) {
-    buildGraph(nodeData)
-  }
 
   data.selectAll('.port')
     .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
@@ -173,6 +135,46 @@ function buildGraph (data) {
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
     .attr('height', (p) => p.height || 0)
+
+  var nodeData = data
+    .selectAll('.node')
+    .data((n) => n.children || [])
+    .enter()
+    .append('g')
+    .attr('transform', (n) => `translate(${n.x + (n.padding ? (n.padding.left || 0) : 0)} ${n.y + (n.padding ? (n.padding.top || 0) : 0)})`)
+
+  if (!nodeData.empty()) {
+    // buildGraph(nodeData, data)
+  }
+
+  if (parent) {
+    parent.selectAll('.link')
+      .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
+      .enter()
+      .insert('path', ':first-child')
+      .attr('class', 'st-link')
+      .attr('d', (e) => {
+        const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
+        const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
+
+        let path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
+        let bendPoints = e.bendPoints || []
+        bendPoints.forEach((bp, i) => {
+          path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
+        })
+        path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop} `
+        return path
+      })
+  }
+
+  data
+    .filter((n) => n.text)
+    .append('text')
+    .text((n) => n.text)
+    .attr('x', (n) => (n.width - n.textWidth) / 2)
+    .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
+    .attr('width', (n) => n.textWidth)
+    .attr('height', (n) => n.textHeight)
 }
 
 function measureSizeRec (node, parent) {
