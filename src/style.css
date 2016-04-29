@@ -3,8 +3,8 @@ body > * {
 }
 
 table, button, svg, textarea {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
 
 td {
@@ -36,9 +36,9 @@ text {
 }
 
 .port {
-    stroke: #000;
-    fill: none;
-    z-index: 42;
+  stroke: #000;
+  fill: none;
+  z-index: 42;
 }
 
 .port.out {

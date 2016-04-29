@@ -22,20 +22,18 @@ if (arg0) {
 }
 
 inputPromise.then((input) => {
-  
   /* read style sheet */
   var cssPath = path.join(graphifyPath, arg1)
   var css = fs.readFileSync(cssPath, 'utf8')
 
-  vo(function* () {
-
+  vo(function * () {
     /* Nightmare Options */
     var nightmare = Nightmare(
-    {
-      plugins: true,
-      allowDisplayingInsecureContent: true,
-      allowRunningInsecureContent: true
-    })
+      {
+        plugins: true,
+        allowDisplayingInsecureContent: true,
+        allowRunningInsecureContent: true
+      })
 
     /* Open page in nightmare and read svg result */
     var result = yield nightmare
@@ -44,19 +42,16 @@ inputPromise.then((input) => {
       .click('#btnInput')
       .wait('#svgOutput')
       .wait(1000)
-      .evaluate(function(css) {
+      .evaluate(function (css) {
         var svg = document.getElementById('svgOutput')
-        svg.innerHTML = "<style> /* <![CDATA[ */" + css + "/* ]]> */ </style>" + svg.innerHTML
+        svg.innerHTML = '<style> /* <![CDATA[ */' + css + '/* ]]> */ </style>' + svg.innerHTML
         return svg.outerHTML
       }, css)
 
     console.log(result)
 
     yield nightmare.end()
-
-  })(function (err, result)
-  {
-    if (err) return console.log(err);
-  });
-
+  })(function (err, result) {
+    if (err) return console.log(err)
+  })
 })
