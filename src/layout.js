@@ -144,7 +144,7 @@ function buildGraph (data, parent) {
     .attr('transform', (n) => `translate(${n.x + (n.padding ? (n.padding.left || 0) : 0)} ${n.y + (n.padding ? (n.padding.top || 0) : 0)})`)
 
   if (!nodeData.empty()) {
-    // buildGraph(nodeData, data)
+    buildGraph(nodeData, data)
   }
 
   if (parent) {
