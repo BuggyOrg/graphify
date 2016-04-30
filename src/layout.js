@@ -11,6 +11,8 @@ const PORT_SIZE = 5.0
 
 document.getElementById('btnInput').onclick = update
 
+require('./tooltips')
+
 /*
 function viewport () {
   return {
@@ -67,6 +69,16 @@ function doLayout (graph) {
     .attr('width', width)
     .attr('height', height)
     .call(zoom)
+
+  svg.html(`
+  <defs>
+    <filter id="f3" x="0" y="0" width="200%" height="200%">
+      <feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
+      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="10" />
+      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+    </filter>
+  </defs>
+  `)
 
   // group shizzle
   const root = svg
@@ -125,6 +137,7 @@ function buildGraph (data, parent) {
     .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
     .attr('width', (n) => n.width || 0)
     .attr('height', (n) => n.height || 0)
+    .attr('data-meta', (n) => JSON.stringify(n.meta))
 
   data.selectAll('.port')
     .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
@@ -135,6 +148,7 @@ function buildGraph (data, parent) {
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
     .attr('height', (p) => p.height || 0)
+    .attr('data-meta', (p) => JSON.stringify(p.meta))
 
   var nodeData = data
     .selectAll('.node')
@@ -151,7 +165,7 @@ function buildGraph (data, parent) {
     parent.selectAll('.link')
       .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
       .enter()
-      .insert('path', ':first-child')
+      .insert('path', ':nth-child(2)')
       .attr('class', 'st-link')
       .attr('d', (e) => {
         const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
@@ -165,16 +179,19 @@ function buildGraph (data, parent) {
         path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop} `
         return path
       })
+      .attr('data-meta', (e) => JSON.stringify(e.meta))
   }
 
   data
     .filter((n) => n.text)
     .append('text')
     .text((n) => n.text)
+    .attr('class', (n) => `st-node-label ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`)
     .attr('x', (n) => (n.width - n.textWidth) / 2)
     .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
     .attr('width', (n) => n.textWidth)
     .attr('height', (n) => n.textHeight)
+    .attr('data-meta', (n) => JSON.stringify(n.meta))
 }
 
 function measureSizeRec (node, parent) {
