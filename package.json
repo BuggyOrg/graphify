@@ -16,7 +16,7 @@
     "d3": "^3.5.10",
     "d3-measure-text": "0.0.2",
     "get-stdin": "^5.0.1",
-    "klayjs": "^0.3.2",
+    "klayjs": "^0.4.1",
     "klayjs-d3": "^0.3.4",
     "lodash": "^4.0.0",
     "nightmare": "2.0.8",
