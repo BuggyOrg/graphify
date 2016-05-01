@@ -1,7 +1,7 @@
 /* global $ */
 
 const tooltip = $('<div class="tooltip"/>').appendTo('body')
-function showTooltip (content) {
+function showTooltip (content, event) {
   tooltip.html(content).css({top: event.pageY, left: event.pageX + 20}).show()
 }
 
@@ -16,7 +16,7 @@ $(document).on('mousemove', '.st-node.atomic, .st-node-label.atomic', function (
       ${Object.keys(meta.outputPorts).length > 0 ? `<tr><td>Output ports</td>
         <td><ul>${Object.keys(meta.outputPorts).map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
     </table>
-  `)
+  `, event)
 })
 
 $(document).on('mousemove', '.st-node.compound, .st-node-label.compound', function (event) {
@@ -31,7 +31,7 @@ $(document).on('mousemove', '.st-node.compound, .st-node-label.compound', functi
       ${Object.keys(meta.outputPorts).length > 0 ? `<tr><td>Output ports</td>
         <td><ul>${Object.keys(meta.outputPorts).map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
     </table>
-  `)
+  `, event)
   }
 })
 
@@ -43,7 +43,7 @@ $(document).on('mousemove', '.st-port', function (event) {
       <tr><td>Port</td><td></td></tr>
       <tr><td>Type</td><td>${meta.type}</td></tr>
     </table>
-  `)
+  `, event)
 })
 
 $(document).on('mousemove', '.st-link', function (event) {
@@ -55,7 +55,7 @@ $(document).on('mousemove', '.st-link', function (event) {
       <tr><td>Source type</td><td>${meta.sourceType}</td></tr>
       <tr><td>Target type</td><td>${meta.targetType}</td></tr>
     </table>
-  `)
+  `, event)
 })
 
 $(document).on('mouseleave', '.st-node, .st-link, .st-node-label', () => tooltip.hide())
