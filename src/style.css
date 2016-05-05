@@ -72,6 +72,11 @@ text {
   padding-right: 10px;
 }
 
+.tooltip td td:first-child {
+  font-weight: normal;
+  padding-right: 10px;
+}
+
 .tooltip td ul {
   padding: 0;
   margin: 0;

@@ -15,6 +15,9 @@ $(document).on('mousemove', '.st-node.atomic, .st-node-label.atomic', function (
         <td><ul>${Object.keys(meta.inputPorts).map((p) => `<li><code>${p}</code> (${meta.inputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
       ${Object.keys(meta.outputPorts).length > 0 ? `<tr><td>Output ports</td>
         <td><ul>${Object.keys(meta.outputPorts).map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
+      ${meta.params ? `<tr><td>Params</td><td><table>
+        ${Object.keys(meta.params).map((p) => `<tr><td><code>${p}</code></td><td>${meta.params[p]}</td></tr>`)}
+      <table></td></tr>` : ''}
     </table>
   `, event)
 })
@@ -30,6 +33,9 @@ $(document).on('mousemove', '.st-node.compound, .st-node-label.compound', functi
         <td><ul>${Object.keys(meta.inputPorts).map((p) => `<li><code>${p}</code> (${meta.inputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
       ${Object.keys(meta.outputPorts).length > 0 ? `<tr><td>Output ports</td>
         <td><ul>${Object.keys(meta.outputPorts).map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
+      ${meta.params ? `<tr><td>Params</td><td><table>
+        ${Object.keys(meta.params).map((p) => `<tr><td><code>${p}</code></td><td>${meta.params[p]}</td></tr>`)}
+      <table></td></tr>` : ''}
     </table>
   `, event)
   }
