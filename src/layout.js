@@ -137,6 +137,17 @@ function buildGraph (data, parent) {
     .attr('height', (n) => n.height || 0)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
 
+  data
+    .filter((n) => n.text)
+    .append('text')
+    .text((n) => n.text)
+    .attr('class', (n) => `st-node-label ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`)
+    .attr('x', (n) => (n.children || []).length > 0 ? 5 : (n.width - n.textWidth) / 2)
+    .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
+    .attr('width', (n) => n.textWidth)
+    .attr('height', (n) => n.textHeight)
+    .attr('data-meta', (n) => JSON.stringify(n.meta))
+
   data.selectAll('.port')
     .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
     .enter()
@@ -179,17 +190,6 @@ function buildGraph (data, parent) {
       })
       .attr('data-meta', (e) => JSON.stringify(e.meta))
   }
-
-  data
-    .filter((n) => n.text)
-    .append('text')
-    .text((n) => n.text)
-    .attr('class', (n) => `st-node-label ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`)
-    .attr('x', (n) => (n.width - n.textWidth) / 2)
-    .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
-    .attr('width', (n) => n.textWidth)
-    .attr('height', (n) => n.textHeight)
-    .attr('data-meta', (n) => JSON.stringify(n.meta))
 }
 
 function measureSizeRec (node, parent) {
