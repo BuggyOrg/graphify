@@ -72,11 +72,9 @@ function doLayout (graph) {
 
   svg.html(`
   <defs>
-    <filter id="f3" x="0" y="0" width="200%" height="200%">
-      <feOffset result="offOut" in="SourceAlpha" dx="0" dy="0" />
-      <feGaussianBlur result="blurOut" in="offOut" stdDeviation="10" />
-      <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
-    </filter>
+    <marker id="markerArrow" markerWidth="3" markerHeight="3" refX="0.2" refY="1.5" orient="auto">
+      <path d="M0,0 L0,3 L3,1.5 L0,0" style="fill: #333333;" />
+    </marker>
   </defs>
   `)
 
@@ -176,7 +174,7 @@ function buildGraph (data, parent) {
         bendPoints.forEach((bp, i) => {
           path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
         })
-        path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop} `
+        path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop - 10} `
         return path
       })
       .attr('data-meta', (e) => JSON.stringify(e.meta))
