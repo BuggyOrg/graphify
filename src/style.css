@@ -40,7 +40,6 @@ td {
   stroke-width: 3px;
   opacity: 0.8;
   fill: none;
-  marker-end: url(#markerArrow);
 }
 
 .st-port {

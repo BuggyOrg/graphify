@@ -176,6 +176,7 @@ function buildGraph (data, parent) {
       .enter()
       .insert('path', ':nth-child(2)')
       .attr('class', 'st-link')
+      .attr('marker-end', 'url(#markerArrow)')
       .attr('d', (e) => {
         const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
         const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
