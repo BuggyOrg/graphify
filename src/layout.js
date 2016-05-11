@@ -139,6 +139,7 @@ function layouter_Error (graph, root) {
 function buildGraph (data, parent) {
   data
     .append('rect')
+    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node' 
     .attr('width', (n) => (n.width || 0) + ((n.children || []).length > 0 ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
     .attr('height', (n) => n.height || 0)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
@@ -160,6 +161,7 @@ function buildGraph (data, parent) {
     .filter((n) => n.text)
     .append('text')
     .text((n) => n.text)
+    .attr('class', (n) => `st-node-label ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`)
     .attr('x', (n) => (n.children || []).length > 0 ? 5 : (n.width - n.textWidth) / 2)
     .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
@@ -175,6 +177,7 @@ function buildGraph (data, parent) {
     .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
     .enter()
     .append('rect')
+    .attr('class', (p) => `st-port ${/.+_out/.test(p.id) ? 'out' : 'in'}`) // 'st-port' because later uses of `selectAll('.port')` would behave bad if we use 'port'
     .attr('x', (p) => p.x || 0)
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
@@ -207,6 +210,7 @@ function buildGraph (data, parent) {
       .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
       .enter()
       .insert('path', ':nth-child(2)')
+      .attr('class', 'st-link')
       .attr('stroke', '#333')
       .attr('stroke-width', '3px')
       .attr('opacity', 0.8)

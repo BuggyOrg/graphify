@@ -52,6 +52,7 @@ inputPromise.then((input) => {
         svg.removeAttribute('id')
         Array.prototype.forEach.call(svg.querySelectorAll('*'), (e) => {
           e.removeAttribute('data-meta')
+          e.removeAttribute('class')
         })
         return svg.outerHTML
       }, css)
