@@ -48,10 +48,18 @@ inputPromise.then((input) => {
       .wait(1000)
       .evaluate(function (css) {
         var svg = document.getElementById('svgOutput')
-        svg.innerHTML = '<style> /* <![CDATA[ */' + css + '/* ]]> */ </style>' + svg.innerHTML
+        svg.removeAttribute('baseprofile')
+        svg.removeAttribute('id')
+        Array.prototype.forEach.call(svg.querySelectorAll('*'), (e) => {
+          e.removeAttribute('data-meta')
+        })
         return svg.outerHTML
       }, css)
 
+    result = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
+             '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">' +
+             result
+      
     if (program.out) {
       fs.writeFileSync(program.out, result, 'utf8')
     } else {
