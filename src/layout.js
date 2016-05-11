@@ -110,6 +110,14 @@ function setupRec (graph) {
   })
 
   let children = graph.children || []
+  if (children.length > 0) {
+    graph.padding = {
+      left: 10,
+      top: 20,
+      right: 10,
+      bottom: 10
+    }
+  }
   children.forEach((c) => {
     setupRec(c)
   })
@@ -133,7 +141,7 @@ function buildGraph (data, parent) {
   data
     .append('rect')
     .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
-    .attr('width', (n) => n.width || 0)
+    .attr('width', (n) => (n.width || 0) + ((n.children || []).length > 0 ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
     .attr('height', (n) => n.height || 0)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
 
@@ -164,7 +172,7 @@ function buildGraph (data, parent) {
     .data((n) => n.children || [])
     .enter()
     .append('g')
-    .attr('transform', (n) => `translate(${n.x + (n.padding ? (n.padding.left || 0) : 0)} ${n.y + (n.padding ? (n.padding.top || 0) : 0)})`)
+    .attr('transform', (n) => `translate(${n.x + (n.padding ? n.padding.left : 0)} ${n.y + (n.padding ? n.padding.top : 0)})`)
 
   if (!nodeData.empty()) {
     buildGraph(nodeData, data)
@@ -181,7 +189,13 @@ function buildGraph (data, parent) {
         const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
         const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
 
-        let path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
+        let path
+        if (e.source === e.parent.id) {
+          path = `M ${e.sourcePoint.x} ${e.sourcePoint.y} `
+        } else {
+          path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
+        }
+        
         let bendPoints = e.bendPoints || []
         bendPoints.forEach((bp, i) => {
           path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
