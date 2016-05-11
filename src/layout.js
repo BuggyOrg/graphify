@@ -222,7 +222,7 @@ function buildGraph (data, parent) {
         } else {
           path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
         }
-        
+
         let bendPoints = e.bendPoints || []
         bendPoints.forEach((bp, i) => {
           path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `

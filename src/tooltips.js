@@ -46,7 +46,7 @@ $(document).on('mousemove', '.st-port', function (event) {
   // TODO add port name later
   showTooltip(`
     <table>
-      <tr><td>Port</td><td></td></tr>
+      <tr><td>Port</td><td>${meta.name}</td></tr>
       <tr><td>Type</td><td>${meta.type}</td></tr>
     </table>
   `, event)
@@ -58,7 +58,9 @@ $(document).on('mousemove', '.st-link', function (event) {
   showTooltip(`
     <table>
       <tr><td>Link</td><td></td></tr>
+      <tr><td>Source</td><td>${meta.sourceNode}@${meta.sourcePort}</td></tr>
       <tr><td>Source type</td><td>${meta.sourceType}</td></tr>
+      <tr><td>Target</td><td>${meta.targetNode}@${meta.targetPort}</td></tr>
       <tr><td>Target type</td><td>${meta.targetType}</td></tr>
     </table>
   `, event)
