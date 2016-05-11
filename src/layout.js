@@ -166,6 +166,7 @@ function buildGraph (data, parent) {
     .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('font-family', 'sans-serif')
+    .attr('font-size', 14)
     .each(function (n) {
       if ((n.children || []).length > 0) {
         d3.select(this)
