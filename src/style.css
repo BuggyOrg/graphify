@@ -12,50 +12,6 @@ td {
   border: 1px solid #888;
 }
 
-.st-node {
-  stroke: #000;
-}
-
-.st-node.atomic {
-  stroke-width: 3px;
-  fill: #fff;
-}
-
-.st-node.compound {
-  stroke-opacity: 0.5;
-  stroke-dasharray: 10 5;
-  fill-opacity: 0;
-}
-
-.st-node-label {
-  font-family: sans-serif;
-}
-
-.st-node-label.compound {
-  opacity: 0.5;
-}
-
-.st-link {
-  stroke: #333;
-  stroke-width: 3px;
-  opacity: 0.8;
-  fill: none;
-}
-
-.st-port {
-  stroke: #000;
-  fill: none;
-  z-index: 42;
-}
-
-.st-port.out {
-  fill: darkred;
-}
-
-.st-port.in {
-  fill: green;
-}
-
 .tooltip {
   display: none;
 	position: absolute;

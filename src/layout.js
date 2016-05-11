@@ -139,32 +139,57 @@ function layouter_Error (graph, root) {
 function buildGraph (data, parent) {
   data
     .append('rect')
-    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
     .attr('width', (n) => (n.width || 0) + ((n.children || []).length > 0 ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
     .attr('height', (n) => n.height || 0)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
+    .attr('stroke', '#000')
+    .each(function (n) {
+      if ((n.children || []).length > 0) {
+        d3.select(this)
+          .attr('stroke-opacity', 0.5)
+          .attr('stroke-dasharray', '10 5')
+          .attr('fill-opacity', 0)
+      } else {
+        d3.select(this)
+          .attr('stroke-width', '3px')
+          .attr('fill', '#fff')
+      }
+    })
 
   data
     .filter((n) => n.text)
     .append('text')
     .text((n) => n.text)
-    .attr('class', (n) => `st-node-label ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`)
     .attr('x', (n) => (n.children || []).length > 0 ? 5 : (n.width - n.textWidth) / 2)
     .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
-    .attr('width', (n) => n.textWidth)
-    .attr('height', (n) => n.textHeight)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
+    .attr('font-family', 'sans-serif')
+    .each(function (n) {
+      if ((n.children || []).length > 0) {
+        d3.select(this)
+          .attr('opacity', 0.5)
+      }
+    })
 
   data.selectAll('.port')
     .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
     .enter()
     .append('rect')
-    .attr('class', (p) => `st-port ${/.+_out/.test(p.id) ? 'out' : 'in'}`) // 'st-port' because later uses of `selectAll('.port')` would behave bad if we use 'port'
     .attr('x', (p) => p.x || 0)
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
     .attr('height', (p) => p.height || 0)
     .attr('data-meta', (p) => JSON.stringify(p.meta))
+    .attr('stroke', '#000')
+    .each(function (p) {
+      if (/.+_out/.test(p.id)) {
+        d3.select(this)
+          .attr('fill', 'darkred')
+      } else {
+        d3.select(this)
+          .attr('fill', 'green')
+      }
+    })
 
   var nodeData = data
     .selectAll('.node')
@@ -182,8 +207,11 @@ function buildGraph (data, parent) {
       .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
       .enter()
       .insert('path', ':nth-child(2)')
-      .attr('class', 'st-link')
+      .attr('stroke', '#333')
+      .attr('stroke-width', '3px')
+      .attr('opacity', 0.8)
       .attr('marker-end', 'url(#markerArrow)')
+      .attr('fill', 'none')
       .attr('d', (e) => {
         const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
         const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
