@@ -109,15 +109,14 @@ function setupRec (graph) {
     p.height = PORT_SIZE
   })
 
-  let children = graph.children || []
-  if (children.length > 0) {
-    graph.padding = {
-      left: 10,
-      top: 20,
-      right: 10,
-      bottom: 10
-    }
+  graph.padding = {
+    left: 10,
+    top: 20,
+    right: 10,
+    bottom: 10
   }
+
+  let children = graph.children || []
   children.forEach((c) => {
     setupRec(c)
   })
