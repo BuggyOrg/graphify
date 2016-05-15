@@ -123,6 +123,10 @@ function setupRec (graph) {
 }
 
 function layouter_Success (graph, root) {
+  const width = Math.ceil(graph.width + ((graph.padding || {}).left || 0) + ((graph.padding || {}).right) || 0)
+  const height = Math.ceil(graph.height) // the top/bottom padding is already included in the height
+  root
+    .attr('viewBox', `0 0 ${width} ${height}`)
   const rootList = root
     .selectAll('g')
     .data([graph])
