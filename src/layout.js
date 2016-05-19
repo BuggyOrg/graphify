@@ -118,8 +118,9 @@ function setupRec (graph) {
 
   // Layout adjustments, see http://rtsys.informatik.uni-kiel.de/confluence/display/KIELER/JSON+Graph+Format and
   // http://rtsys.informatik.uni-kiel.de/confluence/display/KIELER/KIML+Layout+Options for more information.
+  /*
   graph.properties = Object.assign({}, graph.properties, {
-    'de.cau.cs.kieler.portConstraints': 'FIXED_ORDER' // FIXED_ORDER also includes FIXED_SIZE
+    'de.cau.cs.kieler.portConstraints': 'FIXED_ORDER'
   })
 
   ;(graph.ports || []).forEach((port, i) => {
@@ -128,6 +129,7 @@ function setupRec (graph) {
       'de.cau.cs.kieler.portIndex': i // port index is used for the order of ports
     })
   })
+  */
 
   let children = graph.children || []
   children.forEach((c) => {
