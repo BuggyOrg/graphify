@@ -14,7 +14,7 @@ module.exports = (input) => {
 
   return Promise.resolve(nightmare
     .goto(path.join('file://', graphifyPath, 'app/index.html'))
-    .type('#txtInput', input)
+    .type('#txtInput', typeof input === 'string' ? input : JSON.stringify(input))
     .click('#btnInput')
     .wait('#svgOutput')
     .evaluate(function () {
