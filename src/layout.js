@@ -158,7 +158,7 @@ function layouter_Error (graph, root) {
 function buildGraph (data, parent) {
   data
     .append('rect')
-    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node' 
+    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
     .attr('width', (n) => (n.width || 0) + ((n.children || []).length > 0 ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
     .attr('height', (n) => n.height || 0)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
