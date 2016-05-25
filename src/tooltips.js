@@ -59,9 +59,9 @@ $(document).on('mousemove', '.st-link', function (event) {
     <table>
       <tr><td>Link</td><td></td></tr>
       <tr><td>Source</td><td>${meta.sourceNode}@${meta.sourcePort}</td></tr>
-      <tr><td>Source type</td><td>${meta.sourceType}</td></tr>
+      <tr><td>Source type</td><td>${(typeof (meta.sourceType) === 'object') ? JSON.stringify(meta.sourceType) : meta.sourceType}</td></tr>
       <tr><td>Target</td><td>${meta.targetNode}@${meta.targetPort}</td></tr>
-      <tr><td>Target type</td><td>${meta.targetType}</td></tr>
+      <tr><td>Target type</td><td>${(typeof (meta.targetType) === 'object') ? JSON.stringify(meta.targetType) : meta.targetType}</td></tr>
     </table>
   `, event)
 })
