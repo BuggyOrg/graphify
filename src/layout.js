@@ -171,7 +171,7 @@ $(document).on('click', '.st-node-label.compound', function (event) {
 
     if (node.children && !displayedNode.children) {
       displayedNode.children = JSON.parse(JSON.stringify(node.children))
-      displayedNode.edges = JSON.parse(JSON.stringify(node.edges))
+      displayedNode.edges = node.edges ? JSON.parse(JSON.stringify(node.edges)) : undefined
     } else {
       delete displayedNode.children
       delete displayedNode.edges
