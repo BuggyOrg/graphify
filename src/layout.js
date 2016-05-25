@@ -164,7 +164,7 @@ function getNode (id, graph = actualGraph) {
   }
 }
 
-$(document).on('click', '.st-node.compound', function (event) {
+$(document).on('click', '.st-node-label.compound', function (event) {
   const node = getNode($(this).attr('data-id'), actualGraph)
   if (node.id !== 'root') {
     const displayedNode = getNode($(this).attr('data-id'), displayedGraph)
@@ -221,6 +221,7 @@ function buildGraph (data, parent) {
     .attr('class', (n) => `st-node-label ${hasChildren(n) ? 'compound' : 'atomic'}`)
     .attr('x', (n) => hasChildren(n) ? 5 : (n.width - n.textWidth) / 2)
     .attr('y', (n) => hasChildren(n) ? n.textHeight : (n.height + n.textHeight) / 2)
+    .attr('data-id', (n) => n.id)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('font-family', 'sans-serif')
     .attr('font-size', 14)

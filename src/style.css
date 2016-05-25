@@ -43,3 +43,7 @@ td {
   list-style-position: inside;
   list-style-type: none;
 }
+
+.st-node-label.compound {
+  cursor: hand;
+}
