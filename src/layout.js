@@ -170,8 +170,8 @@ $(document).on('click', '.st-node.compound', function (event) {
     const displayedNode = getNode($(this).attr('data-id'), displayedGraph)
 
     if (node.children && !displayedNode.children) {
-      displayedNode.children = node.children
-      displayedNode.edges = node.edges
+      displayedNode.children = JSON.parse(JSON.stringify(node.children))
+      displayedNode.edges = JSON.parse(JSON.stringify(node.edges))
     } else {
       delete displayedNode.children
       delete displayedNode.edges
