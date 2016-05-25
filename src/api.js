@@ -23,6 +23,7 @@ module.exports = (input) => {
       svg.removeAttribute('id')
       Array.prototype.forEach.call(svg.querySelectorAll('*'), (e) => {
         e.removeAttribute('data-meta')
+        e.removeAttribute('data-id')
         e.removeAttribute('class')
       })
       return svg.outerHTML

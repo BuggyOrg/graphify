@@ -1,4 +1,4 @@
-/* global d3, d3MeasureText */
+/* global d3, d3MeasureText, $ */
 
 /* Layout options */
 const MARGIN = 1.0
@@ -9,7 +9,14 @@ const PORT_SIZE = 5.0
 //	document.getElementById('txtInput').onchange = update
 //	window.onload = Update
 
-document.getElementById('btnInput').onclick = update
+let actualGraph
+let displayedGraph
+
+document.getElementById('btnInput').onclick = () => {
+  actualGraph = JSON.parse(document.getElementById('txtInput').value)
+  displayedGraph = JSON.parse(document.getElementById('txtInput').value)
+  displayGraph()
+}
 
 require('./tooltips')
 
@@ -22,25 +29,9 @@ function viewport () {
 }
 */
 
-function update () {
-  /* read graph input */
-  let text = document.getElementById('txtInput').value
-  let graph = JSON.parse(text)
-
-  /*
-  const addPadding = (node) => {
-    ;(node.children || []).forEach((n) => addPadding(n))
-    node.padding = {
-      top: 200
-    }
-  }
-  addPadding(graph)
-  */
-
-  /* measure size of leaf boxes */
-  measureSizeRec(graph)
-
-  doLayout(graph)
+function displayGraph () {
+  measureSizeRec(displayedGraph)
+  doLayout(displayedGraph)
 }
 
 function doLayout (graph) {
@@ -155,16 +146,63 @@ function layouter_Error (graph, root) {
   console.log(graph)
 }
 
+function getNode (id, graph = actualGraph) {
+  if (graph.id === id) {
+    return graph
+  }
+
+  const node = (graph.children || []).find((n) => n.id === id)
+  if (node) {
+    return node
+  } else {
+    for (let i = 0; i < (graph.children || []).length; i++) {
+      const result = getNode(id, graph.children[i])
+      if (result) {
+        return result
+      }
+    }
+  }
+}
+
+$(document).on('click', '.st-node.compound', function (event) {
+  const node = getNode($(this).attr('data-id'), actualGraph)
+  if (node.id !== 'root') {
+    const displayedNode = getNode($(this).attr('data-id'), displayedGraph)
+
+    if (node.children && !displayedNode.children) {
+      displayedNode.children = node.children
+      displayedNode.edges = node.edges
+    } else {
+      delete displayedNode.children
+      delete displayedNode.edges
+    }
+    // force re-layout
+    delete displayedNode.width
+    delete displayedNode.height
+    delete displayedNode.textWidth
+    delete displayedNode.textHeight
+    delete displayedNode.x
+    delete displayedNode.y
+    displayGraph()
+  }
+})
+
+function hasChildren (node) {
+  node = getNode(node.id, actualGraph)
+  return node.children && node.children.length > 0
+}
+
 function buildGraph (data, parent) {
   data
     .append('rect')
-    .attr('class', (n) => `st-node ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
-    .attr('width', (n) => (n.width || 0) + ((n.children || []).length > 0 ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
+    .attr('class', (n) => `st-node ${hasChildren(n) ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
+    .attr('width', (n) => (n.width || 0) + (hasChildren(n) ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
     .attr('height', (n) => n.height || 0)
+    .attr('data-id', (n) => n.id)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('stroke', '#000')
     .each(function (n) {
-      if ((n.children || []).length > 0) {
+      if (hasChildren(n)) {
         d3.select(this)
           .attr('stroke-opacity', 0.5)
           .attr('stroke-dasharray', '10 5')
@@ -180,14 +218,14 @@ function buildGraph (data, parent) {
     .filter((n) => n.text)
     .append('text')
     .text((n) => n.text)
-    .attr('class', (n) => `st-node-label ${(n.children || []).length > 0 ? 'compound' : 'atomic'}`)
-    .attr('x', (n) => (n.children || []).length > 0 ? 5 : (n.width - n.textWidth) / 2)
-    .attr('y', (n) => n.children ? n.textHeight : (n.height + n.textHeight) / 2)
+    .attr('class', (n) => `st-node-label ${hasChildren(n) ? 'compound' : 'atomic'}`)
+    .attr('x', (n) => hasChildren(n) ? 5 : (n.width - n.textWidth) / 2)
+    .attr('y', (n) => hasChildren(n) ? n.textHeight : (n.height + n.textHeight) / 2)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('font-family', 'sans-serif')
     .attr('font-size', 14)
     .each(function (n) {
-      if ((n.children || []).length > 0) {
+      if (hasChildren(n)) {
         d3.select(this)
           .attr('opacity', 0.5)
       }
@@ -258,6 +296,7 @@ function buildGraph (data, parent) {
   }
 }
 
+const calculateSize = require('calculate-size')
 function measureSizeRec (node, parent) {
   // save parent pointer
   node.parent = parent
@@ -268,7 +307,7 @@ function measureSizeRec (node, parent) {
 
   if (node.labels && node.labels.length > 0) {
     node.text = node.labels[0].text
-    var dim = d3MeasureText(node.text, 'label')
+    var dim = calculateSize(node.text, { fontSize: 14, font: 'Arial' })
     node.textWidth = dim.width
     node.textHeight = dim.height
     node.width = node.width || (1 + MARGIN) * dim.width
