@@ -1,7 +1,7 @@
 {
   "name": "@buggyorg/graphify",
   "description": "visualize the graph of an buggy network graph",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "scripts": {
     "prepublish": "gulp build && babel src -d lib",
     "build": "gulp && babel src -d lib",
