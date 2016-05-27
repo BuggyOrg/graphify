@@ -1,4 +1,4 @@
-/* global d3, d3MeasureText, $ */
+/* global d3, $ */
 
 /* Layout options */
 const MARGIN = 1.0
