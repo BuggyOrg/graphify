@@ -192,17 +192,26 @@ function hasChildren (node) {
   return node.children && node.children.length > 0
 }
 
+function hasEdges (node) {
+  node = getNode(node.id, actualGraph)
+  return node.edges && node.edges.length > 0
+}
+
+function isCompound (node) {
+  return hasChildren(node) || hasEdges(node)
+}
+
 function buildGraph (data, parent) {
   data
     .append('rect')
-    .attr('class', (n) => `st-node ${hasChildren(n) ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
-    .attr('width', (n) => (n.width || 0) + (hasChildren(n) ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
+    .attr('class', (n) => `st-node ${isCompound(n) ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
+    .attr('width', (n) => (n.width || 0) + (isCompound(n) ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
     .attr('height', (n) => n.height || 0)
     .attr('data-id', (n) => n.id)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('stroke', '#000')
     .each(function (n) {
-      if (hasChildren(n)) {
+      if (isCompound(n)) {
         d3.select(this)
           .attr('stroke-opacity', 0.5)
           .attr('stroke-dasharray', '10 5')
@@ -218,15 +227,15 @@ function buildGraph (data, parent) {
     .filter((n) => n.text)
     .append('text')
     .text((n) => n.text)
-    .attr('class', (n) => `st-node-label ${hasChildren(n) ? 'compound' : 'atomic'}`)
-    .attr('x', (n) => hasChildren(n) ? 5 : (n.width - n.textWidth) / 2)
-    .attr('y', (n) => hasChildren(n) ? n.textHeight : (n.height + n.textHeight) / 2)
+    .attr('class', (n) => `st-node-label ${isCompound(n) ? 'compound' : 'atomic'}`)
+    .attr('x', (n) => isCompound(n) ? 5 : (n.width - n.textWidth) / 2)
+    .attr('y', (n) => isCompound(n) ? n.textHeight : (n.height + n.textHeight) / 2)
     .attr('data-id', (n) => n.id)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('font-family', 'sans-serif')
     .attr('font-size', 14)
     .each(function (n) {
-      if (hasChildren(n)) {
+      if (isCompound(n)) {
         d3.select(this)
           .attr('opacity', 0.5)
       }
