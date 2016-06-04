@@ -18,7 +18,7 @@ document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()
 
 require('./tooltips')
 
-if (!!document.getElementById('txtInput').value) {
+if (document.getElementById('txtInput').value.length > 0) {
   displayGraphFromTextfield()
 }
 
