@@ -9,6 +9,7 @@ $(document).on('mousemove', '.st-node.atomic, .st-node-label.atomic', function (
   let meta = JSON.parse($(this).attr('data-meta'))
   showTooltip(`
     <table>
+      <tr><td>Unique Name</td><td><code>${meta.branchPath}</code></td></tr>
       <tr><td>Component</td><td><code>${meta.id}</code> (atomic)</td></tr>
       <tr><td>Version</td><td>${meta.version}</td></tr>
       ${Object.keys(meta.inputPorts).length > 0 ? `<tr><td>Input ports</td>
@@ -27,6 +28,7 @@ $(document).on('mousemove', '.st-node.compound, .st-node-label.compound', functi
   if (meta) { // compound nodes may not have meta data (i.e. the root node doesn't have meta data)
     showTooltip(`
     <table>
+      <tr><td>Unique Name</td><td><code>${meta.branchPath}</code></td></tr>
       <tr><td>Component</td><td><code>${meta.id}</code> (compound)</td></tr>
       <tr><td>Version</td><td>${meta.version}</td></tr>
       ${Object.keys(meta.inputPorts).length > 0 ? `<tr><td>Input ports</td>

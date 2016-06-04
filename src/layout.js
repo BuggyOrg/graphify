@@ -1,7 +1,8 @@
 /* global d3, $ */
 
 /* Layout options */
-const MARGIN = 1.0
+const MARGIN_X = 10.0
+const MARGIN_Y = 8.0
 const PORT_SIZE = 5.0
 
 /* Uncomment for automatic refresh */
@@ -320,7 +321,7 @@ function measureSizeRec (node, parent) {
     var dim = calculateSize(node.text, { fontSize: 14, font: 'Arial' })
     node.textWidth = dim.width
     node.textHeight = dim.height
-    node.width = node.width || (1 + MARGIN) * dim.width
-    node.height = node.height || (1 + MARGIN) * dim.height
+    node.width = node.width || dim.width + 2 * MARGIN_X
+    node.height = node.height || dim.height + 2 * MARGIN_Y
   }
 }
