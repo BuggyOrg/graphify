@@ -1,4 +1,5 @@
 /* global d3, $ */
+const calculateSize = require('calculate-size')
 
 /* Layout options */
 const MARGIN_X = 10.0
@@ -13,22 +14,19 @@ const PORT_SIZE = 5.0
 let actualGraph
 let displayedGraph
 
-document.getElementById('btnInput').onclick = () => {
+document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()
+
+require('./tooltips')
+
+if (!!document.getElementById('txtInput').value) {
+  displayGraphFromTextfield()
+}
+
+function displayGraphFromTextfield () {
   actualGraph = JSON.parse(document.getElementById('txtInput').value)
   displayedGraph = JSON.parse(document.getElementById('txtInput').value)
   displayGraph()
 }
-
-require('./tooltips')
-
-/*
-function viewport () {
-  return {
-    width: window.innerWidth || document.body.clientWidth,
-    height: window.innerHeight || document.body.clientHeight
-  }
-}
-*/
 
 function displayGraph () {
   measureSizeRec(displayedGraph)
@@ -307,7 +305,6 @@ function buildGraph (data, parent) {
   }
 }
 
-const calculateSize = require('calculate-size')
 function measureSizeRec (node, parent) {
   // save parent pointer
   node.parent = parent
