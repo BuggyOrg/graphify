@@ -1,9 +1,31 @@
-var Nightmare = require('nightmare')
-var path = require('path')
+import Nightmare from 'nightmare'
+import path from 'path'
+import fs from 'fs'
 
-var graphifyPath = path.normalize(path.join(__dirname, '../'))
+const graphifyPath = path.normalize(path.join(__dirname, '../'))
 
-module.exports = (input) => {
+export function graphToWebsite (input) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path.join(graphifyPath, 'app', 'index.html'), 'utf8', (err, graphifyPage) => {
+      if (err) {
+        reject(err)
+      } else {
+        graphifyPage = graphifyPage
+          .replace(/(src|href)="(.+?)"/g, (match, attr, src) => {
+            if (/https?:\/\//.test(src)) {
+              return match
+            } else {
+              return `${attr}="file://${path.join(graphifyPath, 'app')}/${src}"`
+            }
+          })
+          .replace('<textarea id="txtInput"></textarea>', '<textarea id="txtInput">' + JSON.stringify(input, null, 2) + '</textarea>')
+        resolve(graphifyPage)
+      }
+    })
+  })
+}
+
+export default function graphToSvg (input) {
   /* Nightmare Options */
   var nightmare = Nightmare({
     plugins: true,
@@ -13,7 +35,7 @@ module.exports = (input) => {
   /* Open page in nightmare and read svg result */
 
   return Promise.resolve(nightmare
-    .goto(path.join('file://', graphifyPath, 'app/index.html'))
+    .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
     .type('#txtInput', typeof input === 'string' ? input : JSON.stringify(input))
     .click('#btnInput')
     .wait('#svgOutput')
