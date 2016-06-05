@@ -315,7 +315,7 @@ function measureSizeRec (node, parent) {
 
   if (node.labels && node.labels.length > 0) {
     node.text = node.labels[0].text
-    var dim = calculateSize(node.text, { fontSize: 14, font: 'Arial' })
+    var dim = calculateSize(node.text, { fontSize: 14, font: 'sans-serif' })
     node.textWidth = dim.width
     node.textHeight = dim.height
     node.width = node.width || dim.width + 2 * MARGIN_X
