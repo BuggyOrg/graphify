@@ -210,13 +210,20 @@ function buildGraph (data, parent) {
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('stroke', '#000')
     .each(function (n) {
+      const node = d3.select(this)
+      if (n.meta.style) {
+        if (n.meta.style.color) {
+          node.attr('stroke', n.meta.style.color)
+        }
+      }
+
       if (isCompound(n)) {
-        d3.select(this)
+        node
           .attr('stroke-opacity', 0.5)
           .attr('stroke-dasharray', '10 5')
           .attr('fill-opacity', 0)
       } else {
-        d3.select(this)
+        node
           .attr('stroke-width', '3px')
           .attr('fill', '#fff')
       }
@@ -234,8 +241,15 @@ function buildGraph (data, parent) {
     .attr('font-family', 'sans-serif')
     .attr('font-size', 14)
     .each(function (n) {
+      const node = d3.select(this)
+      if (n.meta.style) {
+        if (n.meta.style.color) {
+          node.attr('fill', n.meta.style.color)
+        }
+      }
+
       if (isCompound(n)) {
-        d3.select(this)
+        node
           .attr('opacity', 0.5)
       }
     })
@@ -302,6 +316,14 @@ function buildGraph (data, parent) {
         return path
       })
       .attr('data-meta', (e) => JSON.stringify(e.meta))
+      .each(function (e) {
+        const edge = d3.select(this)
+        if (e.meta.style) {
+          if (e.meta.style.color) {
+            edge.attr('stroke', e.meta.style.color)
+          }
+        }
+      })
   }
 }
 
