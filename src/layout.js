@@ -312,7 +312,7 @@ function buildGraph (data, parent) {
       .attr('stroke', '#333')
       .attr('stroke-width', '3px')
       .attr('opacity', 0.8)
-      .attr('marker-end', (e) => `url(#${getMarker((e.meta && e.meta.style) ? (e.meta.style.color || '#333333') : '#333333')}`)
+      .attr('marker-end', (e) => `url(#${getMarker((e.meta && e.meta.style) ? (e.meta.style.color || '#333333') : '#333333')})`)
       .attr('fill', 'none')
       .attr('d', (e) => {
         const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
