@@ -104,8 +104,8 @@ function doLayout (graph) {
       crossMin: 'LAYER_SWEEP',
       algorithm: 'de.cau.cs.kieler.klay.layered'
     },
-    success: (g) => layouter_Success(g, root),
-    error: (g) => layouter_Error(g, root)
+    success: (g) => layouterSuccess(g, root),
+    error: (g) => layouterError(g, root)
   })
 }
 
@@ -144,7 +144,7 @@ function setupRec (graph) {
   })
 }
 
-function layouter_Success (graph, root) {
+function layouterSuccess (graph, root) {
   const width = Math.ceil(graph.width + ((graph.padding || {}).left || 0) + ((graph.padding || {}).right) || 0)
   const height = Math.ceil(graph.height) // the top/bottom padding is already included in the height
   root
@@ -158,7 +158,7 @@ function layouter_Success (graph, root) {
   buildGraph(rootList)
 }
 
-function layouter_Error (graph, root) {
+function layouterError (graph, root) {
   console.log(graph)
 }
 
