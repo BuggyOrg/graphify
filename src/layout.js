@@ -33,9 +33,9 @@ function displayGraph () {
   doLayout(displayedGraph)
 }
 
-function doLayout (graph) {
-  // const {width, height} = viewport()
+let getMarker
 
+function doLayout (graph) {
   /* remove all svg elements */
   let allSvgs = document.querySelectorAll('svg')
   Array.prototype.forEach.call(allSvgs, (svg) => svg.parentNode.removeChild(svg))
@@ -60,16 +60,33 @@ function doLayout (graph) {
     .attr('height', height)
     .call(zoom)
 
-  svg.html(`
-  <defs>
-    <marker id="markerArrow" markerWidth="3" markerHeight="3" refX="0.2" refY="1.5" orient="auto">
-      <path d="M0,0 L0,3 L3,1.5 L0,0" style="fill: #333333;" />
-    </marker>
-  </defs>
-  `)
-
   // group shizzle
   const root = svg
+
+  // svg doesn't inherit marker colors from paths, so we need to add one marker for each color that is used
+  const markerColorMap = {}
+  getMarker = (color) => {
+    if (markerColorMap[color]) {
+      return markerColorMap[color]
+    } else {
+      const id = `marker-${Object.keys(markerColorMap).length}`
+      if (svg.select('defs').empty()) {
+        svg.append('defs')
+      }
+      svg.select('defs').append('marker')
+        .attr('id', id)
+        .attr('markerWidth', 3)
+        .attr('markerHeight', 3)
+        .attr('refX', 0.2)
+        .attr('refY', 1.5)
+        .attr('orient', 'auto')
+        .append('path')
+        .attr('d', 'M0,0 L0,3 L3,1.5 L0,0')
+        .attr('fill', color)
+      markerColorMap[color] = id
+      return id
+    }
+  }
 
   setupRec(graph)
 
@@ -211,7 +228,7 @@ function buildGraph (data, parent) {
     .attr('stroke', '#000')
     .each(function (n) {
       const node = d3.select(this)
-      if (n.meta.style) {
+      if (n.meta && n.meta.style) {
         if (n.meta.style.color) {
           node.attr('stroke', n.meta.style.color)
         }
@@ -242,7 +259,7 @@ function buildGraph (data, parent) {
     .attr('font-size', 14)
     .each(function (n) {
       const node = d3.select(this)
-      if (n.meta.style) {
+      if (n.meta && n.meta.style) {
         if (n.meta.style.color) {
           node.attr('fill', n.meta.style.color)
         }
@@ -295,7 +312,7 @@ function buildGraph (data, parent) {
       .attr('stroke', '#333')
       .attr('stroke-width', '3px')
       .attr('opacity', 0.8)
-      .attr('marker-end', 'url(#markerArrow)')
+      .attr('marker-end', (e) => `url(#${getMarker((e.meta && e.meta.style) ? (e.meta.style.color || '#333333') : '#333333')}`)
       .attr('fill', 'none')
       .attr('d', (e) => {
         const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
@@ -318,7 +335,7 @@ function buildGraph (data, parent) {
       .attr('data-meta', (e) => JSON.stringify(e.meta))
       .each(function (e) {
         const edge = d3.select(this)
-        if (e.meta.style) {
+        if (e.meta && e.meta.style) {
           if (e.meta.style.color) {
             edge.attr('stroke', e.meta.style.color)
           }
