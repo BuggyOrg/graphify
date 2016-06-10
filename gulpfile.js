@@ -41,17 +41,10 @@ function watch () {
   rebundle()
 }
 
-gulp.task('copy-deps', function() {
-  return gulp.src(['./node_modules/d3/d3.min.js',
-                   './node_modules/klayjs/klay.js',
-                   './node_modules/d3-measure-text/lib/d3-measure-text.js'])
-    .pipe(gulpCopy('app/lib', {prefix: 1000}))
-})
-
 gulp.task('build-js', function () { return compile() })
 gulp.task('watch-js', function () { return watch() })
 
-gulp.task('build', ['build-js', 'copy-deps'])
-gulp.task('watch', ['watch-js', 'copy-deps'])
+gulp.task('build', ['build-js'])
+gulp.task('watch', ['watch-js'])
 
 gulp.task('default', ['build'])

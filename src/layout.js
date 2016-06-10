@@ -1,5 +1,7 @@
-/* global d3, $ */
+const d3 = require('d3')
 const calculateSize = require('calculate-size')
+const $ = require('jquery')
+const klay = require('klayjs')
 
 /* Layout options */
 const MARGIN_X = 10.0
@@ -90,7 +92,6 @@ function doLayout (graph) {
 
   setupRec(graph)
 
-  const klay = require('klayjs')
   klay.layout({
     graph: graph,
     options: {

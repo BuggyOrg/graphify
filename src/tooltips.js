@@ -1,4 +1,4 @@
-/* global $ */
+const $ = require('jquery')
 
 const tooltip = $('<div class="tooltip"/>').appendTo('body')
 function showTooltip (content, event) {
