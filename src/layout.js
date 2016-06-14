@@ -218,7 +218,7 @@ function isCompound (node) {
   return hasChildren(node) || hasEdges(node)
 }
 
-function buildGraph (data, parent) {
+function buildGraph (data) {
   data
     .append('rect')
     .attr('class', (n) => `st-node ${isCompound(n) ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
@@ -301,48 +301,47 @@ function buildGraph (data, parent) {
     .attr('transform', (n) => `translate(${n.x + (n.padding ? n.padding.left : 0)} ${n.y + (n.padding ? n.padding.top : 0)})`)
 
   if (!nodeData.empty()) {
-    buildGraph(nodeData, data)
+    buildGraph(nodeData)
   }
 
-  if (parent) {
-    parent.selectAll('.link')
-      .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
-      .enter()
-      .insert('path', ':nth-child(2)')
-      .attr('class', 'st-link')
-      .attr('stroke', '#333')
-      .attr('stroke-width', '3px')
-      .attr('opacity', 0.8)
-      .attr('marker-end', (e) => `url(#${getMarker((e.meta && e.meta.style) ? (e.meta.style.color || '#333333') : '#333333')})`)
-      .attr('fill', 'none')
-      .attr('d', (e) => {
-        const paddingLeft = e.parent.padding ? (e.parent.padding.left || 0) : 0
-        const paddingTop = e.parent.padding ? (e.parent.padding.top || 0) : 0
-
-        let path
-        if (e.source === e.parent.id) {
-          path = `M ${e.sourcePoint.x} ${e.sourcePoint.y} `
-        } else {
-          path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
-        }
-
-        let bendPoints = e.bendPoints || []
-        bendPoints.forEach((bp, i) => {
-          path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
-        })
-        path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop - 10} `
-        return path
-      })
-      .attr('data-meta', (e) => JSON.stringify(e.meta))
-      .each(function (e) {
-        const edge = d3.select(this)
-        if (e.meta && e.meta.style) {
-          if (e.meta.style.color) {
-            edge.attr('stroke', e.meta.style.color)
-          }
-        }
-      })
-  }
+  data.selectAll('.link')
+   .data((n) => (n.edges || []).map((e) => Object.assign({parent: n}, e)))
+   .enter()
+   .insert('path', ':nth-child(2)')
+   .attr('class', 'st-link')
+   .attr('stroke', '#333')
+   .attr('stroke-width', '3px')
+   .attr('opacity', 0.8)
+   .attr('marker-end', (e) => `url(#${getMarker((e.meta && e.meta.style) ? (e.meta.style.color || '#333333') : '#333333')})`)
+   .attr('fill', 'none')
+   .attr('d', (e) => {
+     const paddingLeft = e.parent.padding && e.source !== e.target ? (e.parent.padding.left || 0) : 0
+     const paddingTop = e.parent.padding && e.source !== e.target ? (e.parent.padding.top || 0) : 0
+     let path
+     if (e.source === e.parent.id) {
+       path = `M ${e.sourcePoint.x} ${e.sourcePoint.y} `
+     } else {
+       path = `M ${e.sourcePoint.x + paddingLeft} ${e.sourcePoint.y + paddingTop} `
+     }
+     let bendPoints = e.bendPoints || []
+     bendPoints.forEach((bp, i) => {
+       path += `L ${bp.x + paddingLeft} ${bp.y + paddingTop} `
+     })
+     path += `L ${e.targetPoint.x + paddingLeft} ${e.targetPoint.y + paddingTop - 10} `
+     return path
+   })
+   .attr('data-meta', (e) => JSON.stringify(e.meta))
+   .each(function (e) {
+     const edge = d3.select(this)
+     if (e.meta && e.meta.style) {
+       if (e.meta.style.color) {
+         edge.attr('stroke', e.meta.style.color)
+       }
+     }
+     if (e.source === e.target) {
+       edge.attr('transform', `translate(${-e.parent.x} ${-e.parent.y})`)
+     }
+   })
 }
 
 function measureSizeRec (node, parent) {
