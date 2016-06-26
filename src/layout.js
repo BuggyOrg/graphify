@@ -222,8 +222,8 @@ function buildGraph (data) {
   data
     .append('rect')
     .attr('class', (n) => `st-node ${isCompound(n) ? 'compound' : 'atomic'}`) // 'st-node' because later uses of `selectAll('.node')` would behave bad if we use 'node'
-    .attr('width', (n) => (n.width || 0) + (isCompound(n) ? (n.padding ? n.padding.left + n.padding.right : 0) : 0))
-    .attr('height', (n) => n.height || 0)
+    .attr('width', (n) => (n.width || 0) + (isCompound(n) ? (n.padding ? n.padding.left + n.padding.right : 0) - 1 : 0))
+    .attr('height', (n) => isCompound(n) ? (n.height || 0) - 1 : (n.height || 0))
     .attr('data-id', (n) => n.id)
     .attr('data-meta', (n) => JSON.stringify(n.meta))
     .attr('stroke', '#000')
@@ -240,6 +240,7 @@ function buildGraph (data) {
           .attr('stroke-opacity', 0.5)
           .attr('stroke-dasharray', '10 5')
           .attr('fill-opacity', 0)
+          .attr('transform', 'translate(0.5 0.5)')
       } else {
         node
           .attr('stroke-width', '3px')
