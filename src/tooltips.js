@@ -1,8 +1,17 @@
 const $ = require('jquery')
+const { intersection } = require('lodash')
 
 const tooltip = $('<div class="tooltip"/>').appendTo('body')
 function showTooltip (content, event) {
   tooltip.html(content).css({top: event.pageY, left: event.pageX + 20}).show()
+}
+
+function orderedPorts(meta, inOut) {
+  if (inOut === 'in') {
+    return intersection(meta.settings.argumentOrdering, Object.keys(meta.inputPorts))
+  } else if (inOut === 'out') {
+    return intersection(meta.settings.argumentOrdering, Object.keys(meta.outputPorts))
+  }
 }
 
 $(document).on('mousemove', '.st-node.atomic, .st-node-label.atomic', function (event) {
@@ -13,9 +22,9 @@ $(document).on('mousemove', '.st-node.atomic, .st-node-label.atomic', function (
       <tr><td>Component</td><td><code>${meta.id}</code> (atomic)</td></tr>
       <tr><td>Version</td><td>${meta.version}</td></tr>
       ${Object.keys(meta.inputPorts).length > 0 ? `<tr><td>Input ports</td>
-        <td><ul>${Object.keys(meta.inputPorts).map((p) => `<li><code>${p}</code> (${meta.inputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
+        <td><ul>${orderedPorts(meta, 'in').map((p) => `<li><code>${p}</code> (${meta.inputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
       ${Object.keys(meta.outputPorts).length > 0 ? `<tr><td>Output ports</td>
-        <td><ul>${Object.keys(meta.outputPorts).map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
+        <td><ul>${orderedPorts(meta, 'out').map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
       ${meta.params ? `<tr><td>Params</td><td><table>
         ${Object.keys(meta.params).map((p) => `<tr><td><code>${p}</code></td><td>${meta.params[p]}</td></tr>`)}
       <table></td></tr>` : ''}
@@ -32,9 +41,9 @@ $(document).on('mousemove', '.st-node.compound, .st-node-label.compound', functi
       <tr><td>Component</td><td><code>${meta.id}</code> (compound)</td></tr>
       <tr><td>Version</td><td>${meta.version}</td></tr>
       ${Object.keys(meta.inputPorts).length > 0 ? `<tr><td>Input ports</td>
-        <td><ul>${Object.keys(meta.inputPorts).map((p) => `<li><code>${p}</code> (${meta.inputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
+        <td><ul>${orderedPorts(meta, 'in').map((p) => `<li><code>${p}</code> (${meta.inputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
       ${Object.keys(meta.outputPorts).length > 0 ? `<tr><td>Output ports</td>
-        <td><ul>${Object.keys(meta.outputPorts).map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
+        <td><ul>${orderedPorts(meta, 'out').map((p) => `<li><code>${p}</code> (${meta.outputPorts[p]})</li>`).join('')}</ul></td></tr>` : ''}
       ${meta.params ? `<tr><td>Params</td><td><table>
         ${Object.keys(meta.params).map((p) => `<tr><td><code>${p}</code></td><td>${meta.params[p]}</td></tr>`)}
       <table></td></tr>` : ''}
