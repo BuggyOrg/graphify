@@ -6,7 +6,7 @@ function showTooltip (content, event) {
   tooltip.html(content).css({top: event.pageY, left: event.pageX + 20}).show()
 }
 
-function orderedPorts(meta, inOut) {
+function orderedPorts (meta, inOut) {
   if (inOut === 'in') {
     return intersection(meta.settings.argumentOrdering, Object.keys(meta.inputPorts))
   } else if (inOut === 'out') {
