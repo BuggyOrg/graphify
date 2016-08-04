@@ -133,7 +133,7 @@ function setupRec (graph) {
 
   ;(graph.ports || []).forEach((port, i) => {
     port.properties = Object.assign({}, port.properties || {}, {
-      'de.cau.cs.kieler.portSide': /.+_out/.test(port.id) ? 'SOUTH' : 'NORTH', // input nodes at north, output nodes at south
+      'de.cau.cs.kieler.portSide': /.+_out$/.test(port.id) ? 'SOUTH' : 'NORTH', // input nodes at north, output nodes at south
       'de.cau.cs.kieler.portIndex': i // port index is used for the order of ports
     })
   })
@@ -277,7 +277,7 @@ function buildGraph (data) {
     .data((n) => (n.ports || []).map((p) => Object.assign({parent: n}, p)))
     .enter()
     .append('rect')
-    .attr('class', (p) => `st-port ${/.+_out/.test(p.id) ? 'out' : 'in'}`) // 'st-port' because later uses of `selectAll('.port')` would behave bad if we use 'port'
+    .attr('class', (p) => `st-port ${/.+_out$/.test(p.id) ? 'out' : 'in'}`) // 'st-port' because later uses of `selectAll('.port')` would behave bad if we use 'port'
     .attr('x', (p) => p.x || 0)
     .attr('y', (p) => p.y || 0)
     .attr('width', (p) => p.width || 0)
@@ -285,7 +285,7 @@ function buildGraph (data) {
     .attr('data-meta', (p) => JSON.stringify(p.meta))
     .attr('stroke', '#000')
     .each(function (p) {
-      if (/.+_out/.test(p.id)) {
+      if (/.+_out$/.test(p.id)) {
         d3.select(this)
           .attr('fill', 'darkred')
       } else {
