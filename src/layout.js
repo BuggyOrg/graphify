@@ -287,10 +287,10 @@ function buildGraph (data) {
     .each(function (p) {
       if (/.+_out$/.test(p.id)) {
         d3.select(this)
-          .attr('fill', 'darkred')
+          .attr('fill', 'black')
       } else {
         d3.select(this)
-          .attr('fill', 'green')
+          .attr('fill', 'white')
       }
     })
 
