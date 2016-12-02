@@ -14,7 +14,7 @@ const PORT_SIZE = 5.0
 //	window.onload = Update
 
 let actualGraph
-let displayedGraph
+// let displayedGraph
 
 document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()
 
@@ -26,13 +26,13 @@ if (document.getElementById('txtInput').value.length > 0) {
 
 function displayGraphFromTextfield () {
   actualGraph = JSON.parse(document.getElementById('txtInput').value)
-  displayedGraph = JSON.parse(document.getElementById('txtInput').value)
+  window.displayedGraph = JSON.parse(document.getElementById('txtInput').value)
   displayGraph()
 }
 
 function displayGraph () {
-  measureSizeRec(displayedGraph)
-  doLayout(displayedGraph)
+  measureSizeRec(window.displayedGraph)
+  doLayout(window.displayedGraph)
 }
 
 let getMarker
@@ -184,7 +184,7 @@ function getNode (id, graph = actualGraph) {
 $(document).on('click', '.st-node-label.compound', function (event) {
   const node = getNode($(this).attr('data-id'), actualGraph)
   if (node.id !== 'root') {
-    const displayedNode = getNode($(this).attr('data-id'), displayedGraph)
+    const displayedNode = getNode($(this).attr('data-id'), window.displayedGraph)
 
     if (node.children && !displayedNode.children) {
       displayedNode.children = JSON.parse(JSON.stringify(node.children))

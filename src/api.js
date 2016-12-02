@@ -59,3 +59,23 @@ export default function graphToSvg (input) {
       return result
     })
 }
+
+export function graphToLayout (input) {
+  /* Nightmare Options */
+  var nightmare = Nightmare({
+    plugins: true,
+    allowDisplayingInsecureContent: true,
+    allowRunningInsecureContent: true
+  })
+  /* Open page in nightmare and read svg result */
+
+  return Promise.resolve(nightmare
+    .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
+    .type('#txtInput', typeof input === 'string' ? input : JSON.stringify(input))
+    .click('#btnInput')
+    .wait('#svgOutput')
+    .evaluate(function () {
+      return window.displayedGraph
+    })
+    .end())
+}
