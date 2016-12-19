@@ -1,6 +1,7 @@
 import Nightmare from 'nightmare'
 import path from 'path'
 import fs from 'fs'
+import graphify from 'graphify'
 
 const graphifyPath = path.normalize(path.join(__dirname, '../'))
 
@@ -29,6 +30,7 @@ export default function graphToSvg (input) {
   /* Nightmare Options */
   var nightmare = Nightmare({
     plugins: true,
+    typeInterval: 0.00000001,
     allowDisplayingInsecureContent: true,
     allowRunningInsecureContent: true
   })
@@ -36,20 +38,7 @@ export default function graphToSvg (input) {
 
   return Promise.resolve(nightmare
     .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
-    .type('#txtInput', typeof input === 'string' ? input : JSON.stringify(input))
-    .click('#btnInput')
-    .wait('#svgOutput')
-    .evaluate(function () {
-      var svg = document.getElementById('svgOutput')
-      svg.removeAttribute('baseprofile')
-      svg.removeAttribute('id')
-      Array.prototype.forEach.call(svg.querySelectorAll('*'), (e) => {
-        e.removeAttribute('data-meta')
-        e.removeAttribute('data-id')
-        e.removeAttribute('class')
-      })
-      return svg.outerHTML
-    })
+    .evaluate((graph) => window.renderGraph(graph), input)
     .end())
     .then((svg) => {
       var result =
@@ -64,6 +53,7 @@ export function graphToLayout (input) {
   /* Nightmare Options */
   var nightmare = Nightmare({
     plugins: true,
+    typeInterval: 0,
     allowDisplayingInsecureContent: true,
     allowRunningInsecureContent: true
   })
@@ -71,11 +61,33 @@ export function graphToLayout (input) {
 
   return Promise.resolve(nightmare
     .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
-    .type('#txtInput', typeof input === 'string' ? input : JSON.stringify(input))
-    .click('#btnInput')
-    .wait('#svgOutput')
-    .evaluate(function () {
-      return window.displayedGraph
-    })
+    .evaluate((graph) => window.layoutGraph(graph), input)
     .end())
+}
+
+const measureTextInBrowser = (text, style) => {
+  var nightmareMeasureInstance = null
+  if (!nightmareMeasureInstance) {
+    var nightmare = Nightmare({
+      plugins: true,
+      allowDisplayingInsecureContent: true,
+      allowRunningInsecureContent: true
+    })
+    nightmareMeasureInstance = nightmare
+      .goto(path.join('file://', graphifyPath, 'app', 'measure.html'))
+  }
+  // nightmare does NOT return a normal promise.. make one out of it
+  return new Promise((resolve) =>
+    nightmareMeasureInstance
+      // .evaluate((text, style) => window.measureText(text, style), text, style)
+      .evaluate((text, style) => window.measureText(text, style), text, style)
+      .end()
+      .then((size) => resolve(size), (err) => console.error(err)))
+}
+
+
+export function graphifyLayout (input) {
+  return graphify.layout(input, graphify.defaults, measureTextInBrowser)
+  // .then((kgraph) => graphToSvg(kgraph))
+  .then((res) => console.log(res))
 }

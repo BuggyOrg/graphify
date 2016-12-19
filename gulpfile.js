@@ -7,11 +7,21 @@ var browserify = require('browserify')
 var watchify = require('watchify')
 
 function compile (watch) {
-  var bundler = browserify('./src/layout.js', { debug: true }).transform('babelify', {presets: ['es2015']})
+  var bundler = browserify('./src/index.js', { debug: true }).transform('babelify', {presets: ['es2015']})
 
   bundler.bundle()
     .on('error', function (err) { console.error(err); this.emit('end') })
-    .pipe(source('layout.js'))
+    .pipe(source('index.js'))
+    .pipe(buffer())
+    .pipe(sourcemaps.init({ loadMaps: true }))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./app'))
+
+  var bundler2 = browserify('./src/measure.js').transform('babelify', {presets: ['es2015']})
+
+  bundler2.bundle()
+    .on('error', function (err) { console.error(err); this.emit('end') })
+    .pipe(source('measure.js'))
     .pipe(buffer())
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(sourcemaps.write('./'))
@@ -19,12 +29,12 @@ function compile (watch) {
 }
 
 function watch () {
-  var bundler = watchify(browserify('./src/layout.js', { debug: true }).transform('babelify', {presets: ['es2015']}))
+  var bundler = watchify(browserify('./src/index.js', { debug: true }).transform('babelify', {presets: ['es2015']}))
 
   function rebundle () {
     bundler.bundle()
       .on('error', function (err) { console.error(err); this.emit('end') })
-      .pipe(source('layout.js'))
+      .pipe(source('index.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe(sourcemaps.write('./'))
