@@ -5,15 +5,17 @@ var Render = require('./render')
 //	document.getElementById('txtInput').onchange = update
 //	window.onload = Update
 
-document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()
+window.init = function () {
+  document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()
 
-require('./tooltips')
+  require('./tooltips')
 
-if (document.getElementById('txtInput').value.length > 0) {
-  displayGraphFromTextfield()
-}
+  if (window.getEditorContent().length > 0) {
+    displayGraphFromTextfield()
+  }
 
-function displayGraphFromTextfield () {
-  var actualGraph = JSON.parse(document.getElementById('txtInput').value)
-  Render.renderGraph(actualGraph, 'svgOutput')
+  function displayGraphFromTextfield () {
+    var actualGraph = JSON.parse(window.getEditorContent())
+    Render.renderGraph(actualGraph, 'svgOutput')
+  }
 }

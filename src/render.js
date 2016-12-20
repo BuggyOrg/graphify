@@ -3,6 +3,8 @@ const d3 = require('d3')
 const Layout = require('./layout.js')
 const Graph = require('./graph')
 
+window.d3 = d3
+
 function extractSvg (element) {
   var svg = document.getElementById(element)
   svg.removeAttribute('baseprofile')
@@ -19,7 +21,7 @@ window.renderGraph = (graph, element) => {
   element = element || 'svgOutput'
   return Layout.layoutGraph(graph)
   .then((layoutedGraph) => {
-    layouterSuccess(graph, 'svgOutput')
+    layouterSuccess(layoutedGraph, 'svgOutput')
     return extractSvg('svgOutput')
   })
   .catch((error) => {
@@ -39,12 +41,12 @@ function removeOldSvgs () {
 
 function createSvgRoot (element, width, height) {
   let svg
-  let zoom = d3.behavior.zoom()
+  let zoom = window.d3.behavior.zoom()
     .on('zoom', () => {
       svg.select('g').attr('transform', `translate(${d3.event.translate}) scale(${d3.event.scale})`)
     })
 
-  svg = d3.select('#tdOutput')
+  svg = window.d3.select('#tdOutput')
     .append('svg')
     .attr('id', element)
     .attr('xmlns', 'http://www.w3.org/2000/svg')

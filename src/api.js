@@ -1,11 +1,19 @@
 import Nightmare from 'nightmare'
 import path from 'path'
 import fs from 'fs'
-import graphify from 'graphify'
+import graphify from 'graphify-node'
 
 const graphifyPath = path.normalize(path.join(__dirname, '../'))
+const nightmare = () => {
+  return Nightmare({
+    plugins: true,
+    allowDisplayingInsecureContent: true,
+    allowRunningInsecureContent: true
+  })
+}
 
 export function graphToWebsite (input) {
+  var inputStr = (typeof (input) === 'object') ? JSON.stringify(input, null, 2) : input
   return new Promise((resolve, reject) => {
     fs.readFile(path.join(graphifyPath, 'app', 'index.html'), 'utf8', (err, graphifyPage) => {
       if (err) {
@@ -19,7 +27,7 @@ export function graphToWebsite (input) {
               return `${attr}="file://${path.join(graphifyPath, 'app')}/${src}"`
             }
           })
-          .replace('<textarea id="txtInput"></textarea>', '<textarea id="txtInput">' + JSON.stringify(input, null, 2) + '</textarea>')
+          .replace('value: \'\',', 'value: \'' + inputStr.split('\n').join('\\n') + '\',')
         resolve(graphifyPage)
       }
     })
@@ -27,16 +35,8 @@ export function graphToWebsite (input) {
 }
 
 export default function graphToSvg (input) {
-  /* Nightmare Options */
-  var nightmare = Nightmare({
-    plugins: true,
-    typeInterval: 0.00000001,
-    allowDisplayingInsecureContent: true,
-    allowRunningInsecureContent: true
-  })
   /* Open page in nightmare and read svg result */
-
-  return Promise.resolve(nightmare
+  return Promise.resolve(nightmare()
     .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
     .evaluate((graph) => window.renderGraph(graph), input)
     .end())
@@ -50,44 +50,25 @@ export default function graphToSvg (input) {
 }
 
 export function graphToLayout (input) {
-  /* Nightmare Options */
-  var nightmare = Nightmare({
-    plugins: true,
-    typeInterval: 0,
-    allowDisplayingInsecureContent: true,
-    allowRunningInsecureContent: true
-  })
   /* Open page in nightmare and read svg result */
-
-  return Promise.resolve(nightmare
+  return Promise.resolve(nightmare()
     .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
     .evaluate((graph) => window.layoutGraph(graph), input)
     .end())
 }
 
 const measureTextInBrowser = (text, style) => {
-  var nightmareMeasureInstance = null
-  if (!nightmareMeasureInstance) {
-    var nightmare = Nightmare({
-      plugins: true,
-      allowDisplayingInsecureContent: true,
-      allowRunningInsecureContent: true
-    })
-    nightmareMeasureInstance = nightmare
-      .goto(path.join('file://', graphifyPath, 'app', 'measure.html'))
-  }
   // nightmare does NOT return a normal promise.. make one out of it
   return new Promise((resolve) =>
-    nightmareMeasureInstance
-      // .evaluate((text, style) => window.measureText(text, style), text, style)
+    nightmare()
+      .goto(path.join('file://', graphifyPath, 'app', 'measure.html'))
       .evaluate((text, style) => window.measureText(text, style), text, style)
       .end()
-      .then((size) => resolve(size), (err) => console.error(err)))
+      .then((size) => resolve(size), (err) => reject(err)))
 }
 
-
+// slow variant with graphify in node... prefer graphify in browser
+// to minimize nightmare instances
 export function graphifyLayout (input) {
-  return graphify.layout(input, graphify.defaults, measureTextInBrowser)
-  // .then((kgraph) => graphToSvg(kgraph))
-  .then((res) => console.log(res))
+  return graphify.layout(input, measureTextInBrowser, graphify.defaults)
 }

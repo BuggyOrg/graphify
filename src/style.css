@@ -1,47 +1,7 @@
-body > * {
-  text-align: center;
-  font-family: sans-serif;
-}
-
-table, button, svg, textarea {
+#btnInput, svg {
   width: 100%;
   height: 100%;
-}
-
-td {
-  border: 1px solid #888;
-}
-
-.tooltip {
-  display: none;
-	position: absolute;
-  background: #fff;
-	border-radius: 2px;
-	padding: 10px;
-	font-size: 12px Arial;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-}
-
-.tooltip table td {
-  border: none;
-  vertical-align: top;
-}
-
-.tooltip td:first-child {
-  font-weight: bold;
-  padding-right: 10px;
-}
-
-.tooltip td td:first-child {
-  font-weight: normal;
-  padding-right: 10px;
-}
-
-.tooltip td ul {
-  padding: 0;
-  margin: 0;
-  list-style-position: inside;
-  list-style-type: none;
+  min-height: 40px;
 }
 
 .st-node-label.compound {

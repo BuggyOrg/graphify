@@ -1,5 +1,5 @@
 const $ = require('jquery')
-const { intersection } = require('lodash')
+const intersection = require('lodash/intersection')
 
 const tooltip = $('<div class="tooltip"/>').appendTo('body')
 function showTooltip (content, event) {

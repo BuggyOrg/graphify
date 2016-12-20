@@ -17,14 +17,18 @@
     "d3": "^3.5.10",
     "d3-measure-text": "0.0.2",
     "get-stdin": "^5.0.1",
+    "graphify-node": "^1.0.0",
     "jquery": "^3.0.0",
     "klayjs": "^0.4.1",
     "klayjs-d3": "^0.3.4",
     "lodash": "^4.0.0",
+    "monaco-editor": "^0.7.0",
     "nightmare": "2.9.0",
+    "open": "0.0.5",
     "readtoend": "0.0.1",
     "run-sequence": "^1.1.5",
-    "standard": "^6.0.8"
+    "standard": "^6.0.8",
+    "tempfile": "^1.1.1"
   },
   "devDependencies": {
     "babel-cli": "^6.7.7",
