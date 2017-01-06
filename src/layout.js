@@ -1,6 +1,7 @@
 const calculateSize = require('calculate-size')
 const graphify = require('graphify-node')
 
+/*
 const defaultOptions = {
   measure: {
     marginX: 10.0,
@@ -27,6 +28,7 @@ const defaultOptions = {
     algorithm: 'de.cau.cs.kieler.klay.layered'
   }
 }
+*/
 
 // export layouting. Do everything
 window.layoutGraph = (graph, options) => {

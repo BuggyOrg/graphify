@@ -1,6 +1,10 @@
 node_modules
 app/layout.js
 app/layout.js.map
+app/index.js
+app/index.js.map
+app/measure.js
+app/measure.js.map
 lib
 app/lib
 *~

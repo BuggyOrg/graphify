@@ -59,7 +59,7 @@ export function graphToLayout (input) {
 
 const measureTextInBrowser = (text, style) => {
   // nightmare does NOT return a normal promise.. make one out of it
-  return new Promise((resolve) =>
+  return new Promise((resolve, reject) =>
     nightmare()
       .goto(path.join('file://', graphifyPath, 'app', 'measure.html'))
       .evaluate((text, style) => window.measureText(text, style), text, style)

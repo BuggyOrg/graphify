@@ -31,8 +31,7 @@ if (program.page) {
       fs.writeFileSync(file, page, 'utf8')
       open(file)
     })
-}
-else {
+} else {
   inputPromise
     .then(API.graphToSvg)
     .then((svg) => {
