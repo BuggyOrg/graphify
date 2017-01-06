@@ -4,7 +4,7 @@
   "version": "0.2.2",
   "scripts": {
     "prepublish": "gulp build && babel src -d lib",
-    "build": "gulp && babel src -d lib",
+    "build": "gulp && babel src -d lib && cp src/style.css app/style.css",
     "test": "standard ./src/**/*.js"
   },
   "main": "./lib/api.js",
