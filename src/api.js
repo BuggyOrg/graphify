@@ -34,7 +34,7 @@ export function graphToWebsite (input) {
   })
 }
 
-export default function graphToSvg (input) {
+export function graphToSvg (input) {
   /* Open page in nightmare and read svg result */
   return Promise.resolve(nightmare()
     .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
