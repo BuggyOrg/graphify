@@ -43,5 +43,6 @@ if (program.page) {
     })
     .catch((err) => {
       console.error('Generating the SVG failed', err)
+      process.exitCode = 1
     })
 }
