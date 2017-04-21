@@ -4,7 +4,7 @@ import program from 'commander'
 import fs from 'fs'
 import getStdin from 'get-stdin'
 import path from 'path'
-import * as API from './api'
+import { graphToSvg, graphToWebsite } from './api'
 import tempfile from 'tempfile'
 import open from 'open'
 
@@ -25,15 +25,19 @@ if (program.graphfile) {
 
 if (program.page) {
   inputPromise
-    .then(API.graphToWebsite)
+    .then(graphToWebsite)
     .then((page) => {
       var file = tempfile('.html')
       fs.writeFileSync(file, page, 'utf8')
       open(file)
     })
+    .catch((err) => {
+      console.error('Generating the page failed', err)
+      process.exitCode = 1
+    })
 } else {
   inputPromise
-    .then(API.graphToSvg)
+    .then(graphToSvg)
     .then((svg) => {
       if (program.out) {
         fs.writeFileSync(program.out, svg + '\n', 'utf8')
