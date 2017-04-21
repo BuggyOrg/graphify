@@ -16,16 +16,6 @@ function compile (watch) {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('./app'))
-
-  var bundler2 = browserify('./src/measure.js').transform('babelify', {presets: ['es2015']})
-
-  bundler2.bundle()
-    .on('error', function (err) { console.error(err); this.emit('end') })
-    .pipe(source('measure.js'))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({ loadMaps: true }))
-    .pipe(sourcemaps.write('./'))
-    .pipe(gulp.dest('./app'))
 }
 
 function watch () {
