@@ -5,6 +5,7 @@ import React from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import opentype from 'opentype.js'
 
+const graphifyPath = path.normalize(path.join(__dirname, '../'))
 export function graphToWebsite (input) {
   var inputStr = (typeof (input) === 'object') ? JSON.stringify(input, null, 2) : input
   return new Promise((resolve, reject) => {
