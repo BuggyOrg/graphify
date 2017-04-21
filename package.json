@@ -3,8 +3,8 @@
   "description": "visualize the graph of an buggy network graph",
   "version": "0.3.1",
   "scripts": {
-    "prepublish": "babel src -d lib",
-    "build": "babel src -d lib && cp src/style.css app/style.css",
+    "prepublish": "gulp build && babel src -d lib",
+    "build": "gulp && babel src -d lib && cp src/style.css app/style.css",
     "test": "standard ./src/**/*.js"
   },
   "main": "./lib/api.js",
