@@ -3,8 +3,8 @@
   "description": "visualize the graph of an buggy network graph",
   "version": "0.3.1",
   "scripts": {
-    "prepublish": "gulp build && babel src -d lib",
-    "build": "gulp && babel src -d lib && cp src/style.css app/style.css",
+    "prepublish": "babel src -d lib",
+    "build": "babel src -d lib && cp src/style.css app/style.css",
     "test": "standard ./src/**/*.js"
   },
   "main": "./lib/api.js",
@@ -12,6 +12,7 @@
     "graphify": "./lib/cli.js"
   },
   "dependencies": {
+    "@buggyorg/graphify-react": "^0.1.0",
     "calculate-size": "^1.1.1",
     "commander": "^2.9.0",
     "d3": "^3.5.10",
@@ -23,11 +24,13 @@
     "klayjs-d3": "^0.3.4",
     "lodash": "^4.0.0",
     "monaco-editor": "^0.7.0",
-    "nightmare": "2.9.0",
     "open": "0.0.5",
+    "open-sans-fontface": "^1.4.0",
+    "opentype.js": "^0.6.9",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
     "readtoend": "0.0.1",
     "run-sequence": "^1.1.5",
-    "standard": "^6.0.8",
     "tempfile": "^1.1.1"
   },
   "devDependencies": {
@@ -40,6 +43,7 @@
     "gulp": "^3.9.0",
     "gulp-copy": "0.0.2",
     "gulp-sourcemaps": "^1.6.0",
+    "standard": "^10.0.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"

@@ -1,16 +1,9 @@
-import Nightmare from 'nightmare'
 import path from 'path'
 import fs from 'fs'
-import graphify from 'graphify-node'
-
-const graphifyPath = path.normalize(path.join(__dirname, '../'))
-const nightmare = () => {
-  return Nightmare({
-    plugins: true,
-    allowDisplayingInsecureContent: true,
-    allowRunningInsecureContent: true
-  })
-}
+import { Graph, layout } from '@buggyorg/graphify-react'
+import React from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import opentype from 'opentype.js'
 
 export function graphToWebsite (input) {
   var inputStr = (typeof (input) === 'object') ? JSON.stringify(input, null, 2) : input
@@ -34,12 +27,31 @@ export function graphToWebsite (input) {
   })
 }
 
-export function graphToSvg (input) {
-  /* Open page in nightmare and read svg result */
-  return Promise.resolve(nightmare()
-    .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
-    .evaluate((graph) => window.renderGraph(graph), input)
-    .end())
+function createTextMeasurer () {
+  const font = new Promise((resolve, reject) => {
+    opentype.load(require.resolve('open-sans-fontface/fonts/Regular/OpenSans-Regular.ttf'), (err, font) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve(font)
+      }
+    })
+  })
+  return (text, options) => {
+    if (text == null) return 0
+    return font
+    .then((font) => font.getPath(text, 0, 0, options.fontSize || 16).getBoundingBox())
+    .then((boundingBox) => ({
+      width: boundingBox.x2 - boundingBox.x1,
+      height: boundingBox.y2 - boundingBox.y1
+    }))
+  }
+}
+
+export function graphToSvg (input, calculateSize = createTextMeasurer()) {
+  if (typeof input === 'string') input = JSON.parse(input)
+  return layout(input, calculateSize)
+  .then((graph) => renderToStaticMarkup(React.createElement(Graph, { graph })))
     .then((svg) => {
       var result =
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' +
@@ -49,26 +61,14 @@ export function graphToSvg (input) {
     })
 }
 
-export function graphToLayout (input) {
-  /* Open page in nightmare and read svg result */
-  return Promise.resolve(nightmare()
-    .goto(path.join('file://', graphifyPath, 'app', 'index.html'))
-    .evaluate((graph) => window.layoutGraph(graph), input)
-    .end())
+export function graphToLayout (input, calculateSize = createTextMeasurer()) {
+  if (typeof input === 'string') input = JSON.parse(input)
+  return layout(input, calculateSize)
 }
 
-const measureTextInBrowser = (text, style) => {
-  // nightmare does NOT return a normal promise.. make one out of it
-  return new Promise((resolve, reject) =>
-    nightmare()
-      .goto(path.join('file://', graphifyPath, 'app', 'measure.html'))
-      .evaluate((text, style) => window.measureText(text, style), text, style)
-      .end()
-      .then((size) => resolve(size), (err) => reject(err)))
-}
-
-// slow variant with graphify in node... prefer graphify in browser
-// to minimize nightmare instances
-export function graphifyLayout (input) {
-  return graphify.layout(input, measureTextInBrowser, graphify.defaults)
+/**
+ * @deprecated use graphToLayout instead
+ */
+export function graphifyLayout (input, calculateSize) {
+  return graphToLayout(input, calculateSize)
 }
