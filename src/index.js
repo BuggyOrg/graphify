@@ -1,9 +1,9 @@
 var Render = require('./render')
 
 /* Uncomment for automatic refresh */
-//	document.getElementById('txtInput').onkeyup = update
-//	document.getElementById('txtInput').onchange = update
-//	window.onload = Update
+// document.getElementById('txtInput').onkeyup = update
+// document.getElementById('txtInput').onchange = update
+// window.onload = Update
 
 window.init = function () {
   document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()

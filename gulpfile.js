@@ -1,6 +1,5 @@
 var gulp = require('gulp')
 var sourcemaps = require('gulp-sourcemaps')
-var gulpCopy = require('gulp-copy')
 var source = require('vinyl-source-stream')
 var buffer = require('vinyl-buffer')
 var browserify = require('browserify')
