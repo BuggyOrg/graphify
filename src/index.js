@@ -1,4 +1,6 @@
-var Render = require('./render')
+var React = require('react')
+var ReactDom = require('react-dom')
+var GraphLayouter = require('@buggyorg/graphify-react').GraphLayouter
 
 /* Uncomment for automatic refresh */
 // document.getElementById('txtInput').onkeyup = update
@@ -16,6 +18,6 @@ window.init = function () {
 
   function displayGraphFromTextfield () {
     var actualGraph = JSON.parse(window.getEditorContent())
-    Render.renderGraph(actualGraph, 'svgOutput')
+    ReactDom.render(React.createElement(GraphLayouter, { kgraph: actualGraph }), document.getElementById('tdOutput'))
   }
 }

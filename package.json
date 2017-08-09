@@ -11,8 +11,16 @@
   "bin": {
     "graphify": "./lib/cli.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BuggyOrg/graphify-react.git"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BuggyOrg/graphify-react/issues"
+  },
   "dependencies": {
-    "@buggyorg/graphify-react": "^0.1.0",
+    "@buggyorg/graphify-react": "^0.1.1",
     "calculate-size": "^1.1.1",
     "commander": "^2.9.0",
     "d3": "^3.5.10",
@@ -27,8 +35,6 @@
     "open": "0.0.5",
     "open-sans-fontface": "^1.4.0",
     "opentype.js": "^0.6.9",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
     "readtoend": "0.0.1",
     "run-sequence": "^1.1.5",
     "tempfile": "^1.1.1"
@@ -42,6 +48,8 @@
     "browserify": "^13.0.0",
     "gulp": "^3.9.0",
     "gulp-sourcemaps": "^1.6.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
     "standard": "^10.0.2",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
