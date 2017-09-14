@@ -20,7 +20,7 @@
     "url": "https://github.com/BuggyOrg/graphify-react/issues"
   },
   "dependencies": {
-    "@buggyorg/graphify-react": "^0.1.1",
+    "@buggyorg/graphify-react": "^0.2.0",
     "calculate-size": "^1.1.1",
     "commander": "^2.9.0",
     "d3": "^3.5.10",

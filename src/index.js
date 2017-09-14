@@ -1,6 +1,6 @@
 var React = require('react')
 var ReactDom = require('react-dom')
-var GraphLayouter = require('@buggyorg/graphify-react').GraphLayouter
+var GraphViewer = require('@buggyorg/graphify-react').GraphViewer
 
 /* Uncomment for automatic refresh */
 // document.getElementById('txtInput').onkeyup = update
@@ -10,14 +10,12 @@ var GraphLayouter = require('@buggyorg/graphify-react').GraphLayouter
 window.init = function () {
   document.getElementById('btnInput').onclick = () => displayGraphFromTextfield()
 
-  require('./tooltips')
-
   if (window.getEditorContent().length > 0) {
     displayGraphFromTextfield()
   }
 
   function displayGraphFromTextfield () {
     var actualGraph = JSON.parse(window.getEditorContent())
-    ReactDom.render(React.createElement(GraphLayouter, { kgraph: actualGraph }), document.getElementById('tdOutput'))
+    ReactDom.render(React.createElement(GraphViewer, { kgraph: actualGraph }), document.getElementById('tdOutput'))
   }
 }
