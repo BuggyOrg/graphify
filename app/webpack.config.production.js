@@ -26,18 +26,21 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src/index.tpl.html'),
-      inject: 'body',
       filename: 'index.html',
       minify: {
         collapseWhitespace: true
-      }
+      },
+      inject: 'body'
     }),
-    new ExtractTextPlugin({filename: '[name].css', allChunks: true}),
+    new ExtractTextPlugin({ filename: '[name].css', allChunks: true }),
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(require('./package.json').version),
       'process.env': {NODE_ENV: '"production"'}
     }),
-    new webpack.optimize.AggressiveMergingPlugin(),
+    new CopyWebpackPlugin([{
+      from: 'node_modules/monaco-editor/min/vs',
+      to: 'vs'
+    }]),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       beautify: false,
@@ -49,15 +52,7 @@ module.exports = {
         screw_ie8: true
       },
       comments: false
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-      debug: false
-    }),
-    new CopyWebpackPlugin([{
-      from: 'node_modules/monaco-editor/min/vs',
-      to: 'vs'
-    }])
+    })
   ],
   module: {
     rules: [{

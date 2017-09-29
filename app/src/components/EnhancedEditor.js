@@ -29,19 +29,20 @@ export default class EnhancedEditor extends Component {
   }
 
   render () {
-    const { width, height, readOnly, value, options = {}, ...other } = this.props
+    const { width, height, readOnly, value, options = {}, style, ...other } = this.props
 
     return (
       <div
         style={{
           width: width || '100%',
           height: height || '100%',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          ...style
         }}
       >
         <MonacoEditor
-          width={width || '100%'}
-          height={height || '100%'}
+          width='100%'
+          height='100%'
           value={value}
           options={{
             readOnly: readOnly,
@@ -71,6 +72,7 @@ EnhancedEditor.propTypes = {
   onChange: PropTypes.func,
   options: PropTypes.object,
   readOnly: PropTypes.bool,
+  style: PropTypes.object,
   value: PropTypes.string,
   width: PropTypes.oneOfType([
     PropTypes.string,
